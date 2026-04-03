@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TR²S & TR³S Framework | Rethinking Value™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d4a6f;
+            --accent-color: #3182ce;
+            --background-color: #f7fafc;
+            --card-background: #ffffff;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--card-background);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav ul li:first-child {
+            margin-right: auto;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Figure/Image */
+        .figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .figure-caption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 100%);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 0 8px 8px 0;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--card-background);
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            nav ul li:first-child {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="logo">Rethinking Value™</a></li>
+            <li><a href="index.html">Why Extended TRS</a></li>
+            <li><a href="formulas.html">Formulas</a></li>
+            <li><a href="examples.html">Examples</a></li>
+            <li><a href="calculator.html">Calculator</a></li>
+            <li><a href="research.html">Research</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Value Creation, Assets, and CEO Mandates</h1>
+
+        <div class="figure">
+            <img src="images/ceo-stages.png" alt="The Five Stages of CEO Value Creation">
+            <p class="figure-caption">Source: Citrin et al. (2019), Harvard Business Review</p>
+        </div>
+
+        <p>Empirical research on CEO tenures shows that value creation follows recurring patterns over time when observed through market-adjusted Total Shareholder Return. Drawing on longitudinal data from hundreds of CEOs, Citrin, Hildebrand, and Stark identify five stages through which performance typically unfolds across a mandate. These stages describe how outcomes appear from a capital-market perspective.</p>
+
+        <h2>From Performance Stages to Governance Stages</h2>
+
+        <p>Subsequent work by Hildebrand and Stark reframes the CEO lifecycle to reflect how mandates are experienced and governed under contemporary conditions. In <em>The CEO Life Cycle</em>, they retain the five-stage structure but relabel the stages as:</p>
+
+        <p><strong>Launch → Acceleration → Sustainment → Renewal → Transition</strong></p>
+
+        <p>This reframing does not replace the empirical findings of Citrin, Hildebrand, and Stark. It translates that pattern into governance-relevant language, shifting the emphasis from ex post performance outcomes to how leadership attention, board interaction, and mandate expectations evolve over a CEO's tenure.</p>
+
+        <h2>CEO Roles Across Evolving Stages</h2>
+
+        <p>More recent research shifts the analytical lens from stages to roles. CEOs are required to activate different roles as conditions change, often simultaneously. A CEO may need to act as Builder and Operator at the same time, or shift rapidly between Operator and Transformer in response to external shocks.</p>
+
+        <p>Taken together, these frameworks show an evolution from observed performance patterns, to governance stages, to role-based leadership demands under volatility.</p>
+
+        <h2>Changing Conditions for Value Creation</h2>
+
+        <p>What distinguishes the current period from the one in which these lifecycle patterns were originally observed is the compression of CEO mandates alongside the extension of strategic exposure. Median CEO tenure in large European listed companies has fallen to approximately five to six years, while a substantial share of CEOs believe their firms may not remain economically viable over the next decade without significant change.</p>
+
+        <p>Strategic decisions are therefore taken within comparatively short mandates, even as their consequences unfold over much longer horizons.</p>
+
+        <p>At the same time, digital technologies, platforms, and ecosystems blur organizational boundaries. Innovation increasingly occurs across firms rather than within them. Global supply chains optimized for efficiency are exposed to geopolitical tension, regulatory fragmentation, and repeated disruption. Resource constraints, price volatility, and input uncertainty affect long-term asset planning and capital allocation.</p>
+
+        <p>These conditions do not eliminate lifecycle stages. They compress them. CEOs are required to act simultaneously as operators of existing systems and stewards of asset configurations whose economic consequences extend beyond their mandate.</p>
+
+        <h2>Asset Economics as the Missing Layer</h2>
+
+        <div class="highlight-box">
+            <p>The CEO is the steward of assets under pressure.</p>
+        </div>
+
+        <p>Capital is committed. Infrastructure exists. Supply chains are configured. Assets are already in motion. After sale, products and systems continue to consume capacity, capital, and attention. They either remain productive across systems or begin to leak value through degradation, write-downs, and external capture. This trajectory is determined upstream—through design, sourcing, and system architecture.</p>
+
+        <p>This is asset economics.</p>
+
+        <div class="figure">
+            <img src="images/innovator-lens.png" alt="The Innovator: Product / Service → Business Model → Ecosystem">
+            <p class="figure-caption">Source: Konietzko et al. (2021), Business Innovation Towards a Circular Economy, p. 95</p>
+        </div>
+
+        <p>Products sit within business models. Business models are increasingly embedded in ecosystems. Value persists with those who retain control over how outputs return as inputs. Where this control is lost, value migrates elsewhere.</p>
+
+        <h2>Tangible Losses and Asset Drawdown</h2>
+
+        <p>Empirical evidence illustrates the scale of the issue. In large appliance and electronics logistics, damage rates of roughly 6–15% translate into approximately €2.7 billion in direct losses per year in Europe alone and an estimated €14 billion globally in 2024. These losses appear in financial reporting as markdowns, returns, repairs, re-delivery, and disposals.</p>
+
+        <p>What remains unobserved is the associated drawdown of future productive capacity: additional material extraction, energy use, reverse logistics load, immobilised working capital, and operational risk. Financial reporting captures realised loss. The condition of the asset base remains largely invisible.</p>
+
+        <div class="figure">
+            <img src="images/value-hill.png" alt="The Value Hill: Add Value, Destroy Value, Retain Value">
+            <p class="figure-caption">Source: Circle Economy 2016 - Master circular business with the value hill, pp. 4-5</p>
+        </div>
+
+        <p>Early value creation is visible and rewarded. Later value resides inside assets, components, and materials. It is harder to observe and easier to discount. Decisions that accelerate visible returns are often approved. Decisions that preserve asset capacity tend to sit outside dominant evaluation frames.</p>
+
+        <h2>The Governance Gap</h2>
+
+        <p>Performance evaluation across CEO mandates relies primarily on aggregated financial outcomes measured over defined periods. These measures support comparison, accountability, and market discipline. However, they do not distinguish between returns generated through disciplined capital stewardship and returns generated through accelerated asset drawdown or deferred reinvestment.</p>
+
+        <p>This distinction becomes economically relevant under conditions of volatility, constrained inputs, and rising capital intensity, where short-term optimisation can increase medium-term downside risk or impair future cash-flow stability.</p>
+
+        <div class="highlight-box">
+            <p>A firm crosses a strategic threshold when linear optimisation remains technically feasible but becomes economically irrational under these conditions. Beyond this point, preserving asset integrity is no longer discretionary but economically non-optional.</p>
+        </div>
+
+        <p>Existing lifecycle and role frameworks describe how leadership work is organised. They do not provide a mechanism to govern how asset value is preserved, extended, or eroded across mandates.</p>
+
+        <p><strong>This is the gap the extended return logic addresses.</strong></p>
+
+        <p>It retains Total Shareholder Return as the external reference for realised performance, while introducing a governance constraint focused on capital stewardship and asset integrity. The objective is not to redefine performance, but to distinguish between value creation that reinforces future earning capacity and value creation that draws it down.</p>
+
+        <p>Once asset integrity becomes a condition for cash-flow stability, regulatory compliance, or access to critical inputs, it functions as a prerequisite for performance.</p>
+
+        <div class="highlight-box">
+            <p>They arbitrate between viable and non-viable futures.</p>
+        </div>
+
+        <p>At that point, what were once initiatives become infrastructure.</p>
+
+    </main>
+
+    <footer>
+        <p>© 2025-2026 Catherine Schoendorff</p>
+        <p>Extended Shareholder Return | PhD Research</p>
+        <p>Contact: <a href="mailto:catherine.schoendorff@gmail.com">catherine.schoendorff@gmail.com</a></p>
+    </footer>
+</body>
+</html>
