@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples | TR²S & TR³S Framework</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d4a6f;
+            --accent-color: #E85A1B;
+            --background-color: #faf9f7;
+            --card-background: #ffffff;
+            --text-color: #2d3748;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --success-color: #059669;
+            --trs-color: #1e40af;
+            --tr2s-color: #047857;
+            --tr3s-color: #7c3aed;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        nav {
+            background: var(--card-background);
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo img { height: 36px; width: auto; }
+
+        .logo span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--accent-color); }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .intro-section {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 700px) { .intro-grid { grid-template-columns: 1fr; } }
+
+        .intro-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .intro-box h3 svg { width: 24px; height: 24px; color: var(--accent-color); }
+
+        .intro-box p { font-size: 0.95rem; margin-bottom: 1rem; }
+
+        .intro-highlight {
+            background: #fef7f4;
+            border-left: 3px solid var(--accent-color);
+            padding: 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        .metrics-note {
+            background: #fffbeb;
+            border-left: 3px solid #d97706;
+            padding: 1.25rem;
+        }
+
+        .metrics-note p { color: #92400e; font-weight: 500; font-size: 0.9rem; margin: 0; }
+
+        .sector-accordion { margin-bottom: 0.75rem; }
+
+        .sector-header {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sector-header:hover { border-color: var(--accent-color); }
+
+        .sector-header.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .sector-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sector-header h2 svg { width: 22px; height: 22px; opacity: 0.8; }
+        .sector-header.active h2 svg { opacity: 1; }
+
+        .sector-meta { display: flex; align-items: center; gap: 1.5rem; }
+        .case-count { font-size: 0.85rem; color: var(--text-light); }
+        .sector-header.active .case-count { color: rgba(255,255,255,0.8); }
+
+        .arrow { width: 20px; height: 20px; transition: transform 0.3s; }
+        .sector-header.active .arrow { transform: rotate(180deg); }
+
+        .sector-content {
+            display: none;
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            padding: 2rem;
+        }
+
+        .sector-content.active { display: block; }
+
+        .case-card { background: var(--background-color); border: 1px solid var(--border-color); }
+
+        .case-header-bar {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .case-header-bar h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+        }
+
+        .case-header-bar .country { font-size: 0.9rem; opacity: 0.85; margin-top: 0.25rem; }
+
+        .case-header-bar .ticker {
+            background: rgba(255,255,255,0.15);
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .case-body { padding: 2rem; }
+
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container h4 {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .performance-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 600px) { .performance-comparison { grid-template-columns: 1fr; } }
+
+        .performance-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .performance-box h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .stock-data { margin-bottom: 1.25rem; }
+
+        .stock-data .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .stock-data .row:last-child { border-bottom: none; }
+        .stock-data .label { color: var(--text-light); }
+        .stock-data .value { font-weight: 600; }
+
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+
+        .result-chip { text-align: center; padding: 0.75rem 0.5rem; border: 1px solid; }
+        .result-chip.trs { background: #eff6ff; border-color: #bfdbfe; color: var(--trs-color); }
+        .result-chip.tr2s { background: #ecfdf5; border-color: #a7f3d0; color: var(--tr2s-color); }
+        .result-chip.tr3s { background: #f5f3ff; border-color: #ddd6fe; color: var(--tr3s-color); }
+
+        .result-chip .metric { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 0.25rem; }
+        .result-chip .value { font-size: 1.05rem; font-weight: 700; }
+
+        .transformation-section {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .transformation-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .transformation-section > p { font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.8; }
+
+        .ceo-callout {
+            background: #fef7f4;
+            border-left: 3px solid var(--accent-color);
+            padding: 1.25rem;
+        }
+
+        .ceo-callout .ceo-name { font-weight: 600; color: var(--primary-color); margin-bottom: 0.75rem; }
+        .ceo-callout ul { margin-left: 1.25rem; font-size: 0.9rem; }
+        .ceo-callout li { margin-bottom: 0.4rem; }
+
+        .thesis-gates-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 600px) { .thesis-gates-row { grid-template-columns: 1fr; } }
+
+        .thesis-box, .gates-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .thesis-box h4, .gates-box h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .thesis-box ul { margin-left: 1.25rem; font-size: 0.9rem; }
+        .thesis-box li { margin-bottom: 0.5rem; }
+
+        .gate-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .gate-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--success-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .gate-icon svg { width: 12px; height: 12px; }
+
+        .compensation-section {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .compensation-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .compensation-section .subtitle { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+
+        .comp-structure {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (max-width: 500px) { .comp-structure { grid-template-columns: repeat(2, 1fr); } }
+
+        .comp-item {
+            background: var(--background-color);
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .comp-item .label { font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .comp-item .value { font-size: 1.15rem; font-weight: 700; color: var(--primary-color); margin-top: 0.25rem; }
+
+        .scenario-label { font-size: 0.9rem; font-weight: 600; color: var(--primary-color); margin-bottom: 0.75rem; }
+
+        .scenario-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+        .scenario-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .scenario-table td { padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .scenario-table tr:last-child td { border-bottom: none; }
+        .scenario-table .metric-col { font-weight: 600; }
+        .scenario-table .positive { color: var(--success-color); font-weight: 600; }
+
+        .board-relevance {
+            background: #ecfdf5;
+            border: 2px solid var(--success-color);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .board-relevance p { font-weight: 600; color: #065f46; font-size: 0.95rem; margin: 0; }
+
+        .coming-soon { text-align: center; padding: 2.5rem; color: var(--text-light); }
+
+        footer {
+            background: var(--card-background);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-logo { margin-bottom: 1rem; }
+        .footer-logo img { height: 48px; width: auto; }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-tagline { font-size: 0.95rem; color: var(--text-color); margin-bottom: 1.5rem; }
+        .footer-info { font-size: 0.85rem; color: var(--text-light); }
+        .footer-info p { margin-bottom: 0.25rem; }
+        .footer-info a { color: var(--accent-color); text-decoration: none; }
+        .footer-info a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/woman-symbol.png" alt="Rethink Value">
+                <span>Rethink Value™</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Why Extended TRS</a></li>
+                <li><a href="formulas.html">Formulas</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="calculator.html">Calculator</a></li>
+                <li><a href="research.html">Research</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h1>Case Examples</h1>
+            <p>Capital stewardship in practice across European incumbents</p>
+        </div>
+
+        <div class="intro-section">
+            <div class="intro-grid">
+                <div class="intro-box">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Why 2019 → 2024?
+                    </h3>
+                    <p>This five-year window captures a CEO's realistic transformation horizon.</p>
+                    <div class="intro-highlight">
+                        <strong>2019:</strong> Pre-COVID baseline, before the EU Green Deal<br><br>
+                        <strong>2024:</strong> Post-pandemic execution, regulatory clarity<br><br>
+                        Five years is sufficient for a CEO to demonstrate strategic impact on asset configuration and capital allocation.
+                    </div>
+                </div>
+                <div class="intro-box">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Understanding the Metrics
+                    </h3>
+                    <p>TR²S and TR³S extend traditional shareholder return measurement.</p>
+                    <div class="metrics-note">
+                        <p>TR²S and TR³S are <strong>financial metrics</strong> — not ESG scores, not sustainability ratings. They quantify how asset preservation and ecosystem restoration translate into adjusted shareholder returns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header active" onclick="toggleSector(this)">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    Consumer Goods & Fashion
+                </h2>
+                <div class="sector-meta">
+                    <span class="case-count">1 case</span>
+                    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
+            <div class="sector-content active">
+                <div class="case-card">
+                    <div class="case-header-bar">
+                        <div>
+                            <h3>Pandora A/S</h3>
+                            <div class="country">Denmark</div>
+                        </div>
+                        <span class="ticker">PNDORA.CO</span>
+                    </div>
+                    <div class="case-body">
+                        <div class="chart-container">
+                            <h4>Stock Performance — IPO to Today</h4>
+                            <div id="tradingview_pandora"></div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                            <script type="text/javascript">
+                                new TradingView.widget({
+                                    "width": "100%",
+                                    "height": 400,
+                                    "symbol": "OMXCOP:PNDORA",
+                                    "interval": "W",
+                                    "timezone": "Europe/Copenhagen",
+                                    "theme": "light",
+                                    "style": "1",
+                                    "locale": "en",
+                                    "toolbar_bg": "#f1f3f6",
+                                    "enable_publishing": false,
+                                    "allow_symbol_change": false,
+                                    "container_id": "tradingview_pandora",
+                                    "hide_side_toolbar": true,
+                                    "range": "ALL",
+                                    "save_image": false
+                                });
+                            </script>
+                        </div>
+
+                        <div class="performance-comparison">
+                            <div class="performance-box">
+                                <h4>2019 Performance</h4>
+                                <div class="stock-data">
+                                    <div class="row"><span class="label">P₀ (Jan 2, 2019)</span><span class="value">255.45 DKK</span></div>
+                                    <div class="row"><span class="label">P₁ (Dec 30, 2019)</span><span class="value">279.10 DKK</span></div>
+                                    <div class="row"><span class="label">Dividends (D)</span><span class="value">9.00 DKK</span></div>
+                                </div>
+                                <div class="results-grid">
+                                    <div class="result-chip trs"><span class="metric">TRS</span><span class="value">+12.78%</span></div>
+                                    <div class="result-chip tr2s"><span class="metric">TR²S</span><span class="value">+20.20%</span></div>
+                                    <div class="result-chip tr3s"><span class="metric">TR³S</span><span class="value">+22.64%</span></div>
+                                </div>
+                            </div>
+                            <div class="performance-box">
+                                <h4>2024 Performance</h4>
+                                <div class="stock-data">
+                                    <div class="row"><span class="label">P₀ (Jan 2, 2024)</span><span class="value">934 DKK</span></div>
+                                    <div class="row"><span class="label">P₁ (Dec 30, 2024)</span><span class="value">1,317 DKK</span></div>
+                                    <div class="row"><span class="label">Dividends (D)</span><span class="value">20.0 DKK</span></div>
+                                </div>
+                                <div class="results-grid">
+                                    <div class="result-chip trs"><span class="metric">TRS</span><span class="value">+43.15%</span></div>
+                                    <div class="result-chip tr2s"><span class="metric">TR²S</span><span class="value">+70.12%</span></div>
+                                    <div class="result-chip tr3s"><span class="metric">TR³S</span><span class="value">+100.12%</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="transformation-section">
+                            <h4>Transformation Story (2019 → 2024)</h4>
+                            <p>Pandora's transformation from 2019 crisis (DKK 279) to 2024 peak (DKK 1,317) demonstrates how regenerative business models can drive exceptional returns: +372% stock appreciation, ROIC from 20% to 46%, and gross margins from 75% to 79.8%.</p>
+                            <div class="ceo-callout">
+                                <p class="ceo-name">CEO Alexander Lacik led a full regenerative business model transformation under adverse conditions.</p>
+                                <ul>
+                                    <li><strong>2021:</strong> Lab-grown diamonds committed during COVID recovery</li>
+                                    <li><strong>2024:</strong> 100% recycled gold and silver achieved amid market weakness</li>
+                                    <li><strong>End-2024:</strong> Circular positioning completed</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="thesis-gates-row">
+                            <div class="thesis-box">
+                                <h4>Investment Thesis</h4>
+                                <ul>
+                                    <li>Circular business models deliver premium returns</li>
+                                    <li>79.8% Gross Margins (FY2024)</li>
+                                    <li>46% Return on Invested Capital (ROIC)</li>
+                                </ul>
+                            </div>
+                            <div class="gates-box">
+                                <h4>Core Financial Gates</h4>
+                                <div class="gate-item">
+                                    <span class="gate-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg></span>
+                                    <span>ROIC 46% > WACC 5.5% (+4,050 bps spread)</span>
+                                </div>
+                                <div class="gate-item">
+                                    <span class="gate-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg></span>
+                                    <span>FCF EUR 1,200M (2024), +18% YoY growth</span>
+                                </div>
+                                <div class="gate-item">
+                                    <span class="gate-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg></span>
+                                    <span>Net Debt/EBITDA 0.8x (fortress balance sheet)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="compensation-section">
+                            <h4>CEO Compensation Analysis</h4>
+                            <p class="subtitle">Based on European Large-Cap Median Structure</p>
+                            <div class="comp-structure">
+                                <div class="comp-item"><div class="label">Base Salary</div><div class="value">€1.50M</div></div>
+                                <div class="comp-item"><div class="label">STI (Fixed)</div><div class="value">€1.50M</div></div>
+                                <div class="comp-item"><div class="label">LTI (Variable)</div><div class="value">Tied to metric</div></div>
+                                <div class="comp-item"><div class="label">LTI Cap</div><div class="value">€3.00M</div></div>
+                            </div>
+                            <p class="scenario-label">2019 Compensation Scenarios</p>
+                            <table class="scenario-table">
+                                <tr><th>Metric</th><th>Return</th><th>Vesting %</th><th>LTI Payout</th><th>Total Comp</th><th>vs TRS</th></tr>
+                                <tr><td class="metric-col">TRS</td><td>+12.78%</td><td>25.6%</td><td>€0.77M</td><td>€3.77M</td><td>–</td></tr>
+                                <tr><td class="metric-col">TR²S</td><td>+20.20%</td><td>44.9%</td><td>€1.35M</td><td>€4.35M</td><td class="positive">+€0.58M (+15%)</td></tr>
+                                <tr><td class="metric-col">TR³S</td><td>+22.64%</td><td>56.6%</td><td>€1.70M</td><td>€4.70M</td><td class="positive">+€0.93M (+25%)</td></tr>
+                            </table>
+                            <p class="scenario-label">2024 Compensation Scenarios</p>
+                            <table class="scenario-table">
+                                <tr><th>Metric</th><th>Return</th><th>Vesting %</th><th>LTI Payout</th><th>Total Comp</th><th>vs TRS</th></tr>
+                                <tr><td class="metric-col">TRS</td><td>+43.15%</td><td>86.3%</td><td>€2.59M</td><td>€5.59M</td><td>–</td></tr>
+                                <tr><td class="metric-col">TR²S</td><td>+70.12%</td><td>155.6%</td><td>€3.00M (capped)</td><td>€6.00M</td><td class="positive">+€0.41M (+7%)</td></tr>
+                                <tr><td class="metric-col">TR³S</td><td>+100.12%</td><td>200.0% (capped)</td><td>€3.00M (capped)</td><td>€6.00M</td><td class="positive">+€0.41M (+7%)</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="board-relevance">
+                            <p>Board Relevance: Passes all three gates. Meets governance standards for further board review and consideration.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>Manufacturing</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Signify, Sika, and additional cases coming soon.</p></div></div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>Extractives & Primary Materials</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Cases coming soon.</p></div></div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>Construction & Built Environment</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Cases coming soon.</p></div></div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>Food Systems</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Cases coming soon.</p></div></div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>Transport & Logistics</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Renault Re-Factory and additional cases coming soon.</p></div></div>
+        </div>
+
+        <div class="sector-accordion">
+            <div class="sector-header" onclick="toggleSector(this)">
+                <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" /></svg>Technology & Digital Platforms</h2>
+                <div class="sector-meta"><span class="case-count">Coming soon</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+            </div>
+            <div class="sector-content"><div class="coming-soon"><p>Cases coming soon.</p></div></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-logo"><img src="images/woman-symbol.png" alt="Rethink Value"></div>
+        <div class="footer-brand">Rethink Value™</div>
+        <div class="footer-tagline">Catherine Schoendorff, Business Strategist, Circular Economist</div>
+        <div class="footer-info">
+            <p>© 2025–2026 Catherine Schoendorff</p>
+            <p>Extended Shareholder Return | PhD Research</p>
+            <p><a href="mailto:catherine.schoendorff@gmail.com">catherine.schoendorff@gmail.com</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleSector(header) {
+            header.classList.toggle('active');
+            header.nextElementSibling.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
