@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /mechanics.html
+Disallow: /calculator.html
+Disallow: /examples.html
+Disallow: /portal.html
