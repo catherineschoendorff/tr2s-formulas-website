@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator | Rethink Value™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d4a6f;
+            --accent-color: #E85A1B;
+            --background-color: #f7fafc;
+            --card-background: #ffffff;
+            --text-color: #1a365d;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --success-color: #38a169;
+            --warning-color: #d69e2e;
+            --danger-color: #e53e3e;
+            --trs-color: #3182ce;
+            --tr2s-color: #38a169;
+            --tr3s-color: #805ad5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.25rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        /* Hamburger Menu */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 200;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--primary-color);
+            margin: 3px 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .nav-toggle.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -280px;
+                width: 280px;
+                height: 100vh;
+                background: var(--primary-color);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 0;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.15);
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-links a {
+                color: #ffffff;
+                display: block;
+                padding: 1rem 0;
+                font-size: 1rem;
+            }
+
+            .nav-links a:hover,
+            .nav-links a.active {
+                color: var(--accent-color);
+            }
+
+            .logo-icon {
+                width: 60px;
+            }
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                padding: 90px 1rem 2rem;
+            }
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p { color: var(--text-light); }
+
+        .mode-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: var(--card-background);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--primary-color);
+        }
+
+        .mode-tab:hover { border-color: var(--accent-color); }
+
+        .mode-tab.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .mode-description {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .prompt-helper {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border: 1px solid #90cdf4;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .prompt-helper.hidden { display: none; }
+
+        .prompt-helper-icon { font-size: 2rem; }
+
+        .prompt-helper-content { flex: 1; min-width: 250px; }
+
+        .prompt-helper-content h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .prompt-helper-content p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .prompt-helper-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: #c94d16; }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover { background: var(--background-color); }
+        .btn-success { background: var(--success-color); color: white; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 { font-size: 1.25rem; color: var(--primary-color); }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-body pre {
+            background: var(--background-color);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .copy-feedback {
+            display: none;
+            color: var(--success-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .copy-feedback.show { display: inline; }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .calculator-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header .step {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .card-header h2 { 
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem; 
+            font-weight: 400;
+            color: var(--primary-color); 
+        }
+        .card-header .subtitle { font-size: 0.8rem; color: var(--text-light); font-weight: 400; }
+
+        .card-header.trs .step { background: var(--trs-color); }
+        .card-header.tr2s .step { background: var(--tr2s-color); }
+        .card-header.tr3s .step { background: var(--tr3s-color); }
+        .card-header.gates .step { background: var(--warning-color); }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+        @media (max-width: 500px) {
+            .form-row { grid-template-columns: 1fr; }
+            .form-row-3 { grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.35rem;
+            color: var(--primary-color);
+        }
+
+        label .hint { font-weight: 400; color: var(--text-light); }
+
+        input, select {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--primary-color);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(232, 90, 27, 0.15);
+        }
+
+        input[type="range"] {
+            padding: 0; height: 6px;
+            -webkit-appearance: none;
+            background: var(--border-color);
+            border-radius: 3px;
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .slider-container { display: flex; align-items: center; gap: 0.75rem; }
+        .slider-container input[type="range"] { flex: 1; }
+        .slider-value { min-width: 50px; text-align: right; font-weight: 600; color: var(--primary-color); }
+
+        .result-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .result-box.trs { border-left: 4px solid var(--trs-color); }
+        .result-box.tr2s { border-left: 4px solid var(--tr2s-color); }
+        .result-box.tr3s { border-left: 4px solid var(--tr3s-color); }
+
+        .result-label { font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-value { font-size: 1.75rem; font-weight: 700; margin-top: 0.25rem; }
+        .result-value.positive { color: var(--success-color); }
+        .result-value.negative { color: var(--danger-color); }
+        .result-value.neutral { color: var(--text-color); }
+        .result-formula { font-size: 0.75rem; color: var(--text-light); margin-top: 0.5rem; font-family: monospace; }
+
+        .gate-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.75rem;
+            align-items: end;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 500px) {
+            .gate-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .gate-row .gate-status {
+                grid-column: 1 / -1;
+                justify-self: center;
+            }
+        }
+
+        .gate-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .gate-status {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .gate-status.pass { background: var(--success-color); color: white; }
+        .gate-status.fail { background: var(--danger-color); color: white; }
+
+        .ces-display {
+            text-align: center;
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .ces-display.pass { background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%); }
+        .ces-display.fail { background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%); }
+
+        .ces-display .ces-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem; }
+        .ces-display.pass .ces-label { color: #22543d; }
+        .ces-display.fail .ces-label { color: #742a2a; }
+
+        .ces-display .ces-value { font-size: 2rem; font-weight: 700; }
+        .ces-display.pass .ces-value { color: #276749; }
+        .ces-display.fail .ces-value { color: #c53030; }
+
+        .ces-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .ces-warning.show { display: block; }
+        .ces-warning p { color: #92400e; font-size: 0.85rem; font-weight: 500; }
+
+        .price-floor-warning {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .price-floor-warning.show { display: block; }
+        .price-floor-warning p { color: #742a2a; font-size: 0.85rem; font-weight: 500; }
+
+        .summary-panel { grid-column: 1 / -1; }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; } }
+
+        .summary-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .summary-card.trs { border-color: var(--trs-color); }
+        .summary-card.tr2s { border-color: var(--tr2s-color); }
+        .summary-card.tr3s { border-color: var(--tr3s-color); }
+
+        .summary-card .metric-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .summary-card.trs .metric-name { color: var(--trs-color); }
+        .summary-card.tr2s .metric-name { color: var(--tr2s-color); }
+        .summary-card.tr3s .metric-name { color: var(--tr3s-color); }
+
+        .summary-card .metric-value { font-size: 2rem; font-weight: 700; }
+        .summary-card .metric-description { font-size: 0.75rem; color: var(--text-light); margin-top: 0.25rem; }
+
+        .compensation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media (max-width: 600px) { .compensation-grid { grid-template-columns: 1fr; } }
+
+        .compensation-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compensation-item:last-child { border-bottom: none; }
+        .compensation-item .label { color: var(--text-light); font-size: 0.9rem; }
+        .compensation-item .value { font-weight: 600; font-size: 1.1rem; }
+
+        .total-compensation {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .total-compensation .label { font-size: 0.85rem; opacity: 0.9; }
+        .total-compensation .value { font-size: 2.25rem; font-weight: 700; margin-top: 0.25rem; }
+
+        .vesting-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--background-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .vesting-gauge { width: 80px; height: 80px; position: relative; }
+        .vesting-gauge svg { transform: rotate(-90deg); }
+        .vesting-gauge circle { fill: none; stroke-width: 8; }
+        .vesting-gauge .bg { stroke: #e2e8f0; }
+        .vesting-gauge .progress { stroke: var(--success-color); stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
+
+        .vesting-gauge .value {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .vesting-details { flex: 1; }
+        .vesting-details h4 { font-size: 0.9rem; color: var(--primary-color); margin-bottom: 0.25rem; }
+        .vesting-details p { font-size: 0.8rem; color: var(--text-light); }
+
+        /* Footer */
+        footer {
+            background: #ffffff;
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-legal {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .footer-legal a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-legal span {
+            margin: 0 0.6rem;
+            color: #a0aec0;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-author {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-meta {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <img src="images/Rethink%20Value%20Logo%20Final.png" class="logo-icon" alt="Rethink Value">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Why TRS and Beyond</a></li>
+                <li><a href="formulas.html">How It Works</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="portal.html">Portal</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h1>Extended Return Calculator</h1>
+            <p>Capital Stewardship Assessment</p>
+        </div>
+
+        <div class="mode-tabs">
+            <button class="mode-tab active" onclick="setMode('public')">📈 Public Company</button>
+            <button class="mode-tab" onclick="setMode('private')">🏢 Private Company</button>
+        </div>
+
+        <div class="mode-description" id="modeDescription">
+            <strong>Public Company Mode:</strong> Use the Perplexity research prompt to gather data, then enter values below.
+        </div>
+
+        <div class="prompt-helper" id="promptHelper">
+            <div class="prompt-helper-icon">📋</div>
+            <div class="prompt-helper-content">
+                <h3>Need help collecting data?</h3>
+                <p>Use our Perplexity Deep Research prompt to gather TRS, Gates, and CES data for any public company.</p>
+            </div>
+            <div class="prompt-helper-buttons">
+                <button class="btn btn-primary" onclick="openPromptModal()">View Prompt</button>
+                <button class="btn btn-secondary" onclick="copyPromptToClipboard()">Copy to Clipboard</button>
+            </div>
+            <span class="copy-feedback" id="copyFeedback">✓ Copied!</span>
+        </div>
+
+        <div class="modal-overlay" id="promptModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Perplexity Deep Research Prompt</h2>
+                    <button class="modal-close" onclick="closePromptModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 1rem; color: var(--text-light); font-size: 0.9rem;">
+                        Replace <strong>[COMPANY NAME]</strong> and <strong>[YEAR]</strong> with your target.
+                    </p>
+                    <pre id="promptText">Analyze [COMPANY NAME] for the fiscal year [YEAR] to calculate Capital Eligibility Status (CES) and Total Return to Shareholders (TRS).
+
+═══════════════════════════════════════════════════════════════
+SECTION A: REQUIRED DATA
+═══════════════════════════════════════════════════════════════
+
+A1. Stock Performance Data
+- P₀: Opening share price on first trading day of [YEAR]
+- P₁: Closing share price on last trading day of [YEAR]
+- D: Total dividends paid per share during [YEAR]
+- Calculate: TRS = (P₁ - P₀ + D) / P₀ × 100%
+
+A2. Gate 1 - ROIC ≥ WACC
+- ROIC (Return on Invested Capital) for [YEAR] in %
+- WACC (Weighted Average Cost of Capital) in %
+- Gate 1 Status: PASS if ROIC ≥ WACC
+
+A3. Gate 2 - Free Cash Flow
+- Free Cash Flow (FCF) for [YEAR] in millions
+- Gate 2 Status: PASS if FCF > 0
+
+A4. Gate 3 - Leverage Ratio
+- Net Debt / EBITDA ratio for [YEAR]
+- Gate 3 Status: PASS if ratio < 3.0x
+
+A5. Capital Eligibility Status (CES)
+- CES = 1 if ALL three gates PASS
+- CES = 0 if ANY gate FAILS
+
+═══════════════════════════════════════════════════════════════
+SECTION B: OPTIONAL (for TR²S/TR³S)
+═══════════════════════════════════════════════════════════════
+
+B1. For TR²S - Asset Preservation
+- RAR: Regenerative/circular assets as % of total assets
+- LVE: Product lifetime extension initiatives
+- CRR: Circular revenue as % of total revenue
+
+B2. For TR³S - Ecosystem Restoration
+- Ecosystem restoration investments
+- Value chain sustainability metrics
+
+═══════════════════════════════════════════════════════════════
+SECTION C: SECTOR
+═══════════════════════════════════════════════════════════════
+
+Classify into ONE sector:
+- Extractives & Primary Materials
+- Manufacturing
+- Construction & Built Environment
+- Consumer Goods & Fashion
+- Food Systems
+- Transport & Logistics
+- Technology & Digital Platforms
+
+Please cite all data sources.</pre>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closePromptModal()">Close</button>
+                    <button class="btn btn-primary" onclick="copyPromptFromModal()">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="step">①</span>
+                    <h2>Case Identification</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Company / Case Name</label>
+                        <input type="text" id="companyName" placeholder="e.g., Sika 2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Period</label>
+                        <input type="text" id="period" placeholder="e.g., FY2024">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Sector</label>
+                    <select id="sector" onchange="applySectorPresets()">
+                        <option value="">Select sector...</option>
+                        <option value="extractives">Extractives & Primary Materials</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="construction">Construction & Built Environment</option>
+                        <option value="consumer">Consumer Goods & Fashion</option>
+                        <option value="food">Food Systems</option>
+                        <option value="transport">Transport & Logistics</option>
+                        <option value="technology">Technology & Digital Platforms</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>LTI Return Metric</label>
+                    <select id="ltiMetric" onchange="calculate()">
+                        <option value="trs">TRS (Market Return)</option>
+                        <option value="tr2s">TR²S (Asset Preservation)</option>
+                        <option value="tr3s">TR³S (Ecosystem Restoration)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header gates">
+                    <span class="step">②</span>
+                    <h2>Capital Eligibility <span class="subtitle">- Three Gates</span></h2>
+                </div>
+                
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>ROIC <span class="hint">%</span></label>
+                        <input type="number" id="roic" value="10.13" step="0.01" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>WACC <span class="hint">%</span></label>
+                        <input type="number" id="wacc" value="6.88" step="0.01" oninput="calculateGates()">
+                    </div>
+                    <div class="gate-status pass" id="gate1Status">✓</div>
+                </div>
+
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>Free Cash Flow <span class="hint">millions</span></label>
+                        <input type="number" id="fcf" value="1402.9" step="0.1" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <select id="fcfCurrency">
+                            <option value="CHF" selected>CHF</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="DKK">DKK</option>
+                        </select>
+                    </div>
+                    <div class="gate-status pass" id="gate2Status">✓</div>
+                </div>
+
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>Net Debt / EBITDA</label>
+                        <input type="number" id="leverage" value="2.4" step="0.1" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>Threshold</label>
+                        <input type="number" id="leverageThreshold" value="3.0" step="0.1" oninput="calculateGates()">
+                    </div>
+                    <div class="gate-status pass" id="gate3Status">✓</div>
+                </div>
+
+                <div class="ces-display pass" id="cesDisplay">
+                    <div class="ces-label">Capital Eligibility Status</div>
+                    <div class="ces-value" id="cesValue">CES = 1</div>
+                </div>
+
+                <div class="ces-warning" id="cesWarning">
+                    <p>⚠️ CES = 0: One or more gates failed. LTI vesting is zero.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header trs">
+                    <span class="step">③</span>
+                    <h2>TRS <span class="subtitle">- Market Return</span></h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>P₀ <span class="hint">Start price</span></label>
+                        <input type="number" id="p0" value="236.50" step="0.01" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>P₁ <span class="hint">End price</span></label>
+                        <input type="number" id="p1" value="208.60" step="0.01" oninput="calculate()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>D <span class="hint">Dividends</span></label>
+                        <input type="number" id="dividends" value="3.60" step="0.01" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <select id="currency">
+                            <option value="CHF" selected>CHF</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="DKK">DKK</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="result-box trs">
+                    <div class="result-label">Total Return to Shareholders</div>
+                    <div class="result-value" id="trsResult">-10.30%</div>
+                    <div class="result-formula">TRS = (P₁ − P₀ + D) / P₀</div>
+                </div>
+                <div class="price-floor-warning" id="priceFloorWarning">
+                    <p>⚠️ Price Floor: P₁ < P₀ - Vesting may be reduced</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header tr2s">
+                    <span class="step">④</span>
+                    <h2>TR²S <span class="subtitle">- Asset Preservation</span></h2>
+                </div>
+                <div class="form-group">
+                    <label>Asset Mix Shift <span class="hint">RAR: Regenerative Asset Ratio (0-1)</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="rar" min="0" max="1" step="0.01" value="0.35" oninput="updateSlider(this); calculate()">
+                        <span class="slider-value" id="rarValue">0.35</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Useful Life Extension <span class="hint">LVE: Lifetime Value Extension (0-1)</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="lve" min="0" max="1" step="0.01" value="0.40" oninput="updateSlider(this); calculate()">
+                        <span class="slider-value" id="lveValue">0.40</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Future Revenue Share <span class="hint">CRR: Circular Revenue Ratio (0-1)</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="crr" min="0" max="1" step="0.01" value="0.25" oninput="updateSlider(this); calculate()">
+                        <span class="slider-value" id="crrValue">0.25</span>
+                    </div>
+                </div>
+                <div class="form-row-3" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label>α</label>
+                        <input type="number" id="alpha" value="0.40" step="0.05" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>β</label>
+                        <input type="number" id="beta" value="0.40" step="0.05" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>γ</label>
+                        <input type="number" id="gamma" value="0.20" step="0.05" oninput="calculate()">
+                    </div>
+                </div>
+                <div class="result-box tr2s">
+                    <div class="result-label">Regenerative Multiplier (RM)</div>
+                    <div class="result-value neutral" id="rmResult">0.3350</div>
+                </div>
+                <div class="result-box tr2s" style="margin-top: 0.75rem;">
+                    <div class="result-label">TR²S - Asset Preservation</div>
+                    <div class="result-value" id="tr2sResult">-3.45%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header tr3s">
+                    <span class="step">⑤</span>
+                    <h2>TR³S <span class="subtitle">- Ecosystem Restoration</span></h2>
+                </div>
+                <div class="form-group">
+                    <label>System Alignment <span class="hint">PA: Purpose Alignment (-1 to +1)</span></label>
+                    <select id="pa" onchange="calculate()">
+                        <option value="-1">-1.0 - Misaligned</option>
+                        <option value="-0.5">-0.5 - Partially Misaligned</option>
+                        <option value="0">0 - Neutral</option>
+                        <option value="0.5" selected>+0.5 - Aligned</option>
+                        <option value="1">+1.0 - Fully Aligned</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Value Chain Conditions <span class="hint">VCI: Value Chain Impact (0-1)</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="vci" min="0" max="1" step="0.01" value="0.45" oninput="updateSlider(this); calculate()">
+                        <span class="slider-value" id="vciValue">0.45</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ecosystem Conditions <span class="hint">ECR: Ecosystem Restoration (0-1)</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="ecr" min="0" max="1" step="0.01" value="0.30" oninput="updateSlider(this); calculate()">
+                        <span class="slider-value" id="ecrValue">0.30</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>λ</label>
+                        <input type="number" id="lambda" value="0.50" step="0.05" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>μ</label>
+                        <input type="number" id="mu" value="0.50" step="0.05" oninput="calculate()">
+                    </div>
+                </div>
+                <div class="result-box tr3s">
+                    <div class="result-label">Restoration Effect (RE)</div>
+                    <div class="result-value neutral" id="reResult">0.1875</div>
+                </div>
+                <div class="result-box tr3s" style="margin-top: 0.75rem;">
+                    <div class="result-label">TR³S - Ecosystem Restoration</div>
+                    <div class="result-value" id="tr3sResult">-4.10%</div>
+                </div>
+            </div>
+
+            <div class="card summary-panel">
+                <div class="card-header">
+                    <span class="step">⑥</span>
+                    <h2>Extended Return Overview</h2>
+                </div>
+                
+                <div class="summary-grid">
+                    <div class="summary-card trs">
+                        <div class="metric-name">TRS</div>
+                        <div class="metric-value" id="summaryTrs">-10.30%</div>
+                        <div class="metric-description">Market Return</div>
+                    </div>
+                    <div class="summary-card tr2s">
+                        <div class="metric-name">TR²S</div>
+                        <div class="metric-value" id="summaryTr2s">-3.45%</div>
+                        <div class="metric-description">Asset Preservation</div>
+                    </div>
+                    <div class="summary-card tr3s">
+                        <div class="metric-name">TR³S</div>
+                        <div class="metric-value" id="summaryTr3s">-4.10%</div>
+                        <div class="metric-description">Ecosystem Restoration</div>
+                    </div>
+                </div>
+
+                <div class="compensation-grid">
+                    <div>
+                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 400; color: var(--primary-color); margin-bottom: 1rem;">CEO Compensation</h3>
+                        <div class="compensation-item">
+                            <span class="label">Base Salary</span>
+                            <span class="value">€1.50M</span>
+                        </div>
+                        <div class="compensation-item">
+                            <span class="label">STI Target</span>
+                            <span class="value">€1.50M</span>
+                        </div>
+                        <div class="compensation-item">
+                            <span class="label">LTI Target</span>
+                            <span class="value">€1.50M</span>
+                        </div>
+                        <div class="compensation-item">
+                            <span class="label">CES Status</span>
+                            <span class="value" id="compCes" style="color: var(--success-color);">✓ Eligible</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 400; color: var(--primary-color); margin-bottom: 1rem;">LTI Outcome</h3>
+                        <div class="vesting-indicator">
+                            <div class="vesting-gauge">
+                                <svg width="80" height="80" viewBox="0 0 80 80">
+                                    <circle class="bg" cx="40" cy="40" r="32"></circle>
+                                    <circle class="progress" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201" id="vestingCircle"></circle>
+                                </svg>
+                                <span class="value" id="vestingPercent">0%</span>
+                            </div>
+                            <div class="vesting-details">
+                                <h4>Vesting Factor</h4>
+                                <p>Based on <span id="selectedMetric">TRS</span></p>
+                                <p>LTI Payout: <strong id="ltiPayout">€0.00M</strong></p>
+                            </div>
+                        </div>
+                        <div class="total-compensation" style="margin-top: 1rem;">
+                            <div class="label">Total CEO Compensation</div>
+                            <div class="value" id="totalComp">€3.00M</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-legal">
+            <a href="impressum.html">Legal Notice</a>
+            <span>&middot;</span>
+            <a href="datenschutz.html">Privacy Policy</a>
+        </div>
+        <div class="footer-logo">
+            <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value Logo">
+        </div>
+        <p class="footer-author">Catherine Schoendorff, Business Strategist, Circular Economist</p>
+        <p class="footer-meta">&copy; 2025&ndash;2026 Catherine Schoendorff &middot; Extended Shareholder Return &middot; PhD Research</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        function setMode(mode) {
+            document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            const ph = document.getElementById('promptHelper');
+            const md = document.getElementById('modeDescription');
+            if (mode === 'public') {
+                ph.classList.remove('hidden');
+                md.innerHTML = '<strong>Public Company Mode:</strong> Use the Perplexity prompt to gather data, then enter values below.';
+            } else {
+                ph.classList.add('hidden');
+                md.innerHTML = '<strong>Private Company Mode:</strong> Enter your company data directly.';
+            }
+        }
+
+        function openPromptModal() { document.getElementById('promptModal').classList.add('show'); }
+        function closePromptModal() { document.getElementById('promptModal').classList.remove('show'); }
+
+        function copyPromptToClipboard() {
+            navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
+                const f = document.getElementById('copyFeedback');
+                f.classList.add('show');
+                setTimeout(() => f.classList.remove('show'), 2000);
+            });
+        }
+
+        function copyPromptFromModal() {
+            navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
+                const btn = event.target;
+                btn.textContent = '✓ Copied!';
+                btn.classList.replace('btn-primary', 'btn-success');
+                setTimeout(() => { btn.textContent = 'Copy to Clipboard'; btn.classList.replace('btn-success', 'btn-primary'); }, 2000);
+            });
+        }
+
+        document.getElementById('promptModal').addEventListener('click', e => { if (e.target.id === 'promptModal') closePromptModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePromptModal(); });
+
+        const sectorPresets = {
+            extractives: { alpha: 0.45, beta: 0.35, gamma: 0.20, lambda: 0.40, mu: 0.60, theta: 0.40 },
+            manufacturing: { alpha: 0.40, beta: 0.40, gamma: 0.20, lambda: 0.50, mu: 0.50, theta: 0.30 },
+            construction: { alpha: 0.35, beta: 0.45, gamma: 0.20, lambda: 0.45, mu: 0.55, theta: 0.35 },
+            consumer: { alpha: 0.30, beta: 0.30, gamma: 0.40, lambda: 0.60, mu: 0.40, theta: 0.25 },
+            food: { alpha: 0.35, beta: 0.35, gamma: 0.30, lambda: 0.50, mu: 0.50, theta: 0.32 },
+            transport: { alpha: 0.40, beta: 0.40, gamma: 0.20, lambda: 0.55, mu: 0.45, theta: 0.28 },
+            technology: { alpha: 0.35, beta: 0.30, gamma: 0.35, lambda: 0.60, mu: 0.40, theta: 0.20 }
+        };
+
+        const ladder = {
+            trs: { threshold: 0, target: 0.10, stretch: 0.20, cap: 0.30 },
+            tr2s: { threshold: 0, target: 0.08, stretch: 0.15, cap: 0.25 },
+            tr3s: { threshold: 0, target: 0.06, stretch: 0.12, cap: 0.20 }
+        };
+
+        let cesStatus = 1;
+
+        function updateSlider(s) { document.getElementById(s.id + 'Value').textContent = parseFloat(s.value).toFixed(2); }
+
+        function applySectorPresets() {
+            const s = document.getElementById('sector').value;
+            if (s && sectorPresets[s]) {
+                const p = sectorPresets[s];
+                document.getElementById('alpha').value = p.alpha;
+                document.getElementById('beta').value = p.beta;
+                document.getElementById('gamma').value = p.gamma;
+                document.getElementById('lambda').value = p.lambda;
+                document.getElementById('mu').value = p.mu;
+                calculate();
+            }
+        }
+
+        function calculateGates() {
+            const roic = parseFloat(document.getElementById('roic').value) || 0;
+            const wacc = parseFloat(document.getElementById('wacc').value) || 0;
+            const fcf = parseFloat(document.getElementById('fcf').value) || 0;
+            const lev = parseFloat(document.getElementById('leverage').value) || 0;
+            const levT = parseFloat(document.getElementById('leverageThreshold').value) || 3;
+
+            const g1 = roic >= wacc, g2 = fcf > 0, g3 = lev < levT;
+            document.getElementById('gate1Status').textContent = g1 ? '✓' : '✗';
+            document.getElementById('gate1Status').className = 'gate-status ' + (g1 ? 'pass' : 'fail');
+            document.getElementById('gate2Status').textContent = g2 ? '✓' : '✗';
+            document.getElementById('gate2Status').className = 'gate-status ' + (g2 ? 'pass' : 'fail');
+            document.getElementById('gate3Status').textContent = g3 ? '✓' : '✗';
+            document.getElementById('gate3Status').className = 'gate-status ' + (g3 ? 'pass' : 'fail');
+
+            cesStatus = (g1 && g2 && g3) ? 1 : 0;
+            const cd = document.getElementById('cesDisplay');
+            const cv = document.getElementById('cesValue');
+            const cw = document.getElementById('cesWarning');
+            const cc = document.getElementById('compCes');
+
+            if (cesStatus) {
+                cd.className = 'ces-display pass'; cv.textContent = 'CES = 1'; cw.classList.remove('show');
+                cc.textContent = '✓ Eligible'; cc.style.color = 'var(--success-color)';
+            } else {
+                cd.className = 'ces-display fail'; cv.textContent = 'CES = 0'; cw.classList.add('show');
+                cc.textContent = '✗ Not Eligible'; cc.style.color = 'var(--danger-color)';
+            }
+            calculate();
+        }
+
+        function getVesting(ret, m) {
+            if (ret < 0) return 0;
+            const l = ladder[m];
+            if (ret >= l.cap) return 2;
+            if (ret >= l.stretch) return 1.5 + 0.5 * (ret - l.stretch) / (l.cap - l.stretch);
+            if (ret >= l.target) return 1 + 0.5 * (ret - l.target) / (l.stretch - l.target);
+            if (ret >= l.threshold) return 0.5 + 0.5 * (ret - l.threshold) / (l.target - l.threshold);
+            return 0;
+        }
+
+        function calculate() {
+            const p0 = parseFloat(document.getElementById('p0').value) || 0;
+            const p1 = parseFloat(document.getElementById('p1').value) || 0;
+            const d = parseFloat(document.getElementById('dividends').value) || 0;
+            const rar = parseFloat(document.getElementById('rar').value) || 0;
+            const lve = parseFloat(document.getElementById('lve').value) || 0;
+            const crr = parseFloat(document.getElementById('crr').value) || 0;
+            const alpha = parseFloat(document.getElementById('alpha').value) || 0;
+            const beta = parseFloat(document.getElementById('beta').value) || 0;
+            const gamma = parseFloat(document.getElementById('gamma').value) || 0;
+            const pa = parseFloat(document.getElementById('pa').value) || 0;
+            const vci = parseFloat(document.getElementById('vci').value) || 0;
+            const ecr = parseFloat(document.getElementById('ecr').value) || 0;
+            const lambda = parseFloat(document.getElementById('lambda').value) || 0;
+            const mu = parseFloat(document.getElementById('mu').value) || 0;
+
+            const trs = p0 ? (p1 - p0 + d) / p0 : 0;
+            const rm = alpha * rar + beta * lve + gamma * crr;
+            const sector = document.getElementById('sector').value;
+            const theta = sector && sectorPresets[sector] ? sectorPresets[sector].theta : 0.30;
+            const tr2s = trs >= 0 ? trs * rm : trs * (1 - theta * rm);
+            const ri = lambda * vci + mu * ecr;
+            const re = pa * ri;
+            const tr3s = tr2s * (1 + re);
+
+            document.getElementById('priceFloorWarning').classList.toggle('show', p1 < p0);
+
+            const fmt = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
+            document.getElementById('trsResult').textContent = fmt(trs);
+            document.getElementById('trsResult').className = 'result-value ' + (trs >= 0 ? 'positive' : 'negative');
+            document.getElementById('rmResult').textContent = rm.toFixed(4);
+            document.getElementById('tr2sResult').textContent = fmt(tr2s);
+            document.getElementById('tr2sResult').className = 'result-value ' + (tr2s >= 0 ? 'positive' : 'negative');
+            document.getElementById('reResult').textContent = re.toFixed(4);
+            document.getElementById('tr3sResult').textContent = fmt(tr3s);
+            document.getElementById('tr3sResult').className = 'result-value ' + (tr3s >= 0 ? 'positive' : 'negative');
+            document.getElementById('summaryTrs').textContent = fmt(trs);
+            document.getElementById('summaryTr2s').textContent = fmt(tr2s);
+            document.getElementById('summaryTr3s').textContent = fmt(tr3s);
+
+            const metric = document.getElementById('ltiMetric').value;
+            const selRet = metric === 'tr2s' ? tr2s : metric === 'tr3s' ? tr3s : trs;
+            let vf = cesStatus ? Math.min(getVesting(selRet, metric), 2) : 0;
+            if (p1 < p0) vf = 0;
+
+            const ltiPay = 1.5 * vf;
+            document.getElementById('vestingPercent').textContent = (vf * 100).toFixed(0) + '%';
+            document.getElementById('selectedMetric').textContent = metric.toUpperCase();
+            document.getElementById('ltiPayout').textContent = '€' + ltiPay.toFixed(2) + 'M';
+            document.getElementById('totalComp').textContent = '€' + (3 + ltiPay).toFixed(2) + 'M';
+            document.getElementById('vestingCircle').style.strokeDashoffset = 201 - (vf / 2) * 201;
+        }
+
+        calculateGates();
+        calculate();
+    </script>
+</body>
+</html>
