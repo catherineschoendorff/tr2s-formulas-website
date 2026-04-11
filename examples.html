@@ -1426,12 +1426,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
         }
 
         .position-metric .label {
             font-size: 0.75rem;
             color: rgba(255,255,255,0.7);
             margin-bottom: 0.25rem;
+            min-height: 2.2em;
+            display: flex;
+            align-items: flex-end;
         }
 
         .position-metric .value {
@@ -1444,7 +1448,7 @@
         .position-metric .value.quadrant {
             font-size: 0.9rem;
             color: var(--accent-color);
-            white-space: normal;
+            white-space: nowrap;
         }
 
         .positioning-rationale {
@@ -1463,6 +1467,25 @@
         }
 
         .board-relevance p { font-weight: 500; color: var(--primary-color); font-size: 0.95rem; margin: 0; }
+
+        .back-to-matrix {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-top: 1.5rem;
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .back-to-matrix:hover {
+            background: #2d4a7c;
+        }
 
         .board-insight {
             background: #f8fafc;
@@ -1614,6 +1637,11 @@
         .gate-icon.warning {
             background: #1a365d;
         }
+
+        /* Gate icons for fail state */
+        .gate-icon.fail {
+            background: #E85A1B;
+        }
     </style>
 </head>
 <body>
@@ -1657,17 +1685,7 @@
                 
                 <p>This case library examines European incumbents between 2019 and 2024. The window captures a CEO's realistic transformation mandate. 2019 marks a pre-COVID baseline, before the EU Green Deal reshaped regulatory expectations. 2024 reflects post-pandemic execution with regulatory clarity. Five years is sufficient for a CEO to demonstrate strategic impact on asset configuration and capital allocation.</p>
                 
-                <h3>Closed-System vs Open-System Strategy</h3>
-                
-                <p>Most strategic frameworks optimise coordination, data flows, and competitive position within the existing economic game. They reshuffle who wins. This site asks a different question: whether the game still has chips on the table. Whether the underlying assets and systems remain viable under resource constraints and system volatility.</p>
-                
-                <p>A firm can be hyper-coordinated and still sit deep in asset risk or capital risk if it accelerates extraction rather than securing asset viability. Circularity is one instrument to protect assets against material scarcity and supply chain disruption. However, circularity for circularity's sake can destroy value. The cases reveal two failure modes that boards must recognize.</p>
-                
-                <p>The first is the PR Circularity Death Zone: strong sustainability narrative, weak capital discipline. H&M reached 91% recycled materials, but ROIC approximated WACC. The transformation consumed capital without creating returns. The second is the Circularity Trap: strong capital discipline, weak economic moat. Pandora achieved 100% recycled precious metals, then watched lab-grown diamond prices collapse 90%. Physical circularity without downstream lock-in commoditized their product.</p>
-                
-                <h3>The Governance Gate</h3>
-                
-                <p>The framework remains agnostic to business models and independent of ESG or sustainability ratings. It asks two questions any board must answer: Does this company earn its cost of capital? And will its asset base remain viable under resource constraints? The Capital Eligibility Score functions as a gate. ROIC below WACC closes the gate. The matrix positions companies along two dimensions: capital discipline and asset viability. The goal is not to prescribe transformation paths, but to identify which firms are asking the right questions about long-term value preservation.</p>
+                <p>The matrix positions companies along two dimensions: capital discipline and asset viability. The Capital Eligibility Score functions as a gate. ROIC below WACC closes the gate. For the framework mechanics, failure modes, and governance logic, see <a href="formulas.html" style="color:#E85A1B;text-decoration:underline;">How It Works</a>.</p>
             </div>
         </div>
 
@@ -1800,6 +1818,11 @@
                         <div class="company-point high" style="left: 48%; bottom: 42%;" data-company="Siemens" data-info="Digital/software focus with DEGREE framework. But Gate 1 failed: ROIC below WACC blocks extended metric eligibility. CES = 0. Conglomerate complexity. PR narrative without capital discipline.">
                             <span class="point-dot"></span>
                             <span class="point-name">Siemens</span>
+                        </div>
+                        <!-- ThyssenKrupp: HIGH vulnerability - Death Zone -->
+                        <div class="company-point high" style="left: 18%; bottom: 28%;" data-company="ThyssenKrupp" data-info="All three gates FAIL. ROIC -8.59%, FCF negative, Net Debt/EBITDA 13.1x. HKM hydrogen project underfinanced. Jindal deal at risk. Restructuring case, not regenerative candidate.">
+                            <span class="point-dot"></span>
+                            <span class="point-name">ThyssenKrupp</span>
                         </div>
                         
                         <!-- THE CIRCULARITY TRAP -->
@@ -2594,6 +2617,8 @@
             </div>
         </div>
 
+            </div>
+        </div>
         <div class="sector-accordion">
             <div class="sector-header" onclick="toggleSector(this)">
                 <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>Manufacturing</h2>
@@ -3343,10 +3368,12 @@
             </div>
         </div>
 
+            </div>
+        </div>
         <div class="sector-accordion">
             <div class="sector-header" onclick="toggleSector(this)">
                 <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>Extractives &amp; Primary Materials</h2>
-                <div class="sector-meta"><span class="case-count">3 cases</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
+                <div class="sector-meta"><span class="case-count">4 cases</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div>
             </div>
             <div class="sector-content">
                 <div class="case-card">
@@ -4083,8 +4110,255 @@
                 </div>
                 <!-- End ArcelorMittal Case -->
 
+                <div class="case-card">
+                    <div class="case-header-bar" onclick="toggleCase(this)">
+                        <div>
+                            <h3>ThyssenKrupp AG</h3>
+                            <div class="case-descriptor">Structural Steel Crisis &amp; Failed Transformation</div>
+                            <div class="country">Germany</div>
+                        </div>
+                        <div class="case-meta">
+                            <span class="ticker">TKA.DE</span>
+                            <svg class="case-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                        </div>
+                    </div>
+                    <div class="case-body">
+                        <div class="chart-cta">
+                            <a href="https://finance.yahoo.com/quote/TKA.DE/chart" target="_blank" rel="noopener" class="chart-cta-button">
+                                <span class="chart-cta-icon">📈</span>
+                                <span class="chart-cta-text">View Stock Performance</span>
+                                <span class="chart-cta-subtext">Open in Yahoo Finance ↗</span>
+                            </a>
+                        </div>
+                        <div class="price-movements">
+                            <h4>Key Price Movements</h4>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <span class="year">2019</span>
+                                    <span class="event"><strong>Elevator spin-off announced:</strong> Stock fell from EUR 20.50 to EUR 11.80 amid investor uncertainty. TK Elevator IPO preparation begins. TRS -42.4%. No dividend paid.</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="year">2020-2021</span>
+                                    <span class="event"><strong>Steel Europe restructuring:</strong> TK Elevator privatised (no IPO). Decarbonisation targets adjusted. COVID impact followed by Ukraine energy shock. Margin collapse begins.</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="year">2022</span>
+                                    <span class="event"><strong>HKM Hydrogen Steel Project announced:</strong> Partnership with Salzgitter AG for fossil-free steel in NRW. Miguel L&oacute;pez becomes CEO. Major capex commitments with long-term timeline and unclear financing.</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="year">2023</span>
+                                    <span class="event"><strong>Shock loss EUR 2.1bn:</strong> TK Elevator impairment writedowns combined with steel market collapse. TRS -33.3%. Dividend suspended. All three financial gates now FAIL.</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="year">2024</span>
+                                    <span class="event"><strong>APEX efficiency programme launched:</strong> 30-year restructuring plan, EUR 250M cost reduction. FCF negative EUR 172M. Continued losses EUR 1.5bn. Stock at EUR 4.10, TRS -42.0%. Daniel Kretinsky acquires 20% of Steel division.</span>
+                                </div>
+                                <div class="timeline-item future-outlook">
+                                    <span class="year">2025</span>
+                                    <span class="event"><em><strong>Kretinsky exits, Jindal enters:</strong> TK Elevator impairment reversal (EUR 902M) creates EUR 532M net profit (non-operational). Kretinsky returns his 20% stake. Jindal Steel (India) makes non-binding offer for entire TKSE, promises EUR 2bn for green transformation. Negotiations stall on EUR 2.5bn pension liabilities.</em></span>
+                                </div>
+                                <div class="timeline-item future-outlook">
+                                    <span class="year">2026</span>
+                                    <span class="event"><em><strong>Jindal deal at risk:</strong> Negotiations stalling over pension transfers. IG Metall demands clarity. EUR 2bn insufficient for full decarbonisation (EUR 8-12bn needed). Strategic reset becomes controlled dissolution. Marine Systems spin-off planned.</em></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="thesis-gates-row">
+                            <div class="thesis-box">
+                                <h4>Investment Thesis</h4>
+                                <ul>
+                                    <li>Structural steel crisis, not a transformation candidate. All three governance gates fail simultaneously</li>
+                                    <li>ROIC deeply negative (-8.59%), FCF negative (EUR -172M), leverage extreme (13.1x Net Debt/EBITDA)</li>
+                                    <li>HKM hydrogen project exists in presentations, not at scale. No ecosystem partners like SSAB</li>
+                                    <li>Jindal deal offers EUR 2bn against EUR 8-12bn real need for decarbonisation</li>
+                                    <li>Not regenerative transformation but controlled asset dissolution</li>
+                                </ul>
+                            </div>
+                            <div class="gates-box">
+                                <h4>Core Financial Gates (2024)</h4>
+                                <p style="font-weight:600;color:#E85A1B;margin-bottom:0.75rem;">CES = 0 (All Gates FAIL)</p>
+                                <div class="gate-item">
+                                    <span class="gate-icon fail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></span>
+                                    <span>ROIC -8.59% vs WACC 8.3% (-1,689 bp spread). Capital destruction.</span>
+                                </div>
+                                <div class="gate-item">
+                                    <span class="gate-icon fail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></span>
+                                    <span>FCF EUR -172M. FCF/Revenue: -0.49%. No cash generation.</span>
+                                </div>
+                                <div class="gate-item">
+                                    <span class="gate-icon fail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></span>
+                                    <span>Net Debt/EBITDA 13.1x vs 3.0x threshold. Massive overleveraging.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="performance-comparison">
+                            <div class="performance-box">
+                                <h4>2019 Performance</h4>
+                                <div class="stock-data">
+                                    <div class="row"><span class="label">P&#8320; (Jan 2, 2019)</span><span class="value">EUR 20.50</span></div>
+                                    <div class="row"><span class="label">P&#8321; (Dec 31, 2019)</span><span class="value">EUR 11.80</span></div>
+                                    <div class="row"><span class="label">Dividends (D)</span><span class="value">EUR 0.00</span></div>
+                                </div>
+                                <div class="results-grid">
+                                    <div class="result-chip trs"><span class="metric">TRS</span><span class="value">-42.44%</span></div>
+                                    <div class="result-chip tr2s" style="background:#f8f9fa;color:#1a365d;"><span class="metric">TR&sup2;S</span><span class="value">Blocked</span></div>
+                                    <div class="result-chip tr3s" style="background:#f8f9fa;color:#1a365d;"><span class="metric">TR&sup3;S</span><span class="value">Blocked</span></div>
+                                </div>
+                            </div>
+                            <div class="performance-box">
+                                <h4>2024 Performance</h4>
+                                <div class="stock-data">
+                                    <div class="row"><span class="label">P&#8320; (Jan 2, 2024)</span><span class="value">EUR 7.20</span></div>
+                                    <div class="row"><span class="label">P&#8321; (Dec 31, 2024)</span><span class="value">EUR 4.10</span></div>
+                                    <div class="row"><span class="label">Dividends (D)</span><span class="value">EUR 0.15</span></div>
+                                </div>
+                                <div class="results-grid">
+                                    <div class="result-chip trs"><span class="metric">TRS</span><span class="value">-40.97%</span></div>
+                                    <div class="result-chip tr2s" style="background:#f8f9fa;color:#1a365d;"><span class="metric">TR&sup2;S</span><span class="value">Blocked</span></div>
+                                    <div class="result-chip tr3s" style="background:#f8f9fa;color:#1a365d;"><span class="metric">TR&sup3;S</span><span class="value">Blocked</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="transformation-section">
+                            <h4>Transformation Story (2019 &rarr; 2024)</h4>
+                            <p>ThyssenKrupp's collapse from EUR 20.50 (2019) to EUR 4.10 (2024) demonstrates what happens when sustainability rhetoric meets capital destruction. Stock down -80% over five years. Revenue declined from EUR 42bn to EUR 35bn (-16%). Net losses cumulative EUR 5bn+. The HKM hydrogen project was announced but never scaled. Unlike SSAB (which built HYBRIT with LKAB and Vattenfall as ecosystem partners), ThyssenKrupp attempted solo transformation without financial capacity or strategic partners. The result: not transformation but dissolution.</p>
+                            <div class="ceo-callout">
+                                <p class="callout-title">ThyssenKrupp: The Broken Fuel Gauge</p>
+                                <p class="callout-summary">CEO bonuses tied to ROCE/EBITDA improvements while fuel runs out. HKM hydrogen project announced but underfinanced (EUR 2bn promised vs EUR 8-12bn needed). No ecosystem partners like SSAB. Pension liabilities (EUR 2.5bn) block any deal. The Vision-Execution Paradox in action: CEO tenure 7 years, transformation horizon 15+ years.</p>
+                                <div class="callout-actions">
+                                    <h5>Key Actions:</h5>
+                                    <ul>
+                                        <li><strong>2021:</strong> TK Elevator privatised (no IPO), liquidity lost</li>
+                                        <li><strong>2022:</strong> HKM hydrogen project announced, no scale achieved</li>
+                                        <li><strong>2024:</strong> Kretinsky 20% stake, APEX restructuring EUR 250M</li>
+                                        <li><em><strong>2025:</strong> Kretinsky exits, Jindal enters with EUR 2bn offer</em></li>
+                                        <li><em><strong>2026:</strong> Jindal deal at risk over pension liabilities</em></li>
+                                    </ul>
+                                </div>
+                                <div class="strategic-outcome">
+                                    <h5>Strategic Outcome:</h5>
+                                    <p>Zero circular revenue disclosed. Recycled content not quantified. Scope 1+2 target -30% by 2030 (from 2018 baseline) but no progress published. CES = 0 (all three gates FAIL). Position: PR Circularity Death Zone. Not a transformation candidate but a restructuring case.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="positioning-input">
+                            <div class="positioning-title">Input for the Strategic Asset Positioning Map (2024)</div>
+                            <div class="positioning-subtitle">Capital Stewardship × Asset Viability × Structural Vulnerability</div>
+                            
+                            <div class="positioning-grid">
+                                <div class="positioning-block">
+                                    <h5>The Governance Gate</h5>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Status</span>
+                                        <span class="metric-value" style="color:#E85A1B;font-weight:700;">FAILED</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">ROIC Spread</span>
+                                        <span class="metric-value">-1,689 bp below WACC</span>
+                                    </div>
+                                </div>
+                                <div class="positioning-block">
+                                    <h5>Asset Viability Factor</h5>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Asset Mix Shift</span>
+                                        <span class="metric-value">0.10</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Useful Life Extension</span>
+                                        <span class="metric-value">0.05</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Future Revenue Share</span>
+                                        <span class="metric-value">0.00</span>
+                                    </div>
+                                </div>
+                                <div class="positioning-block">
+                                    <h5>System Conditions Factor</h5>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Business Model Exposure</span>
+                                        <span class="metric-value">-0.3</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Supply Chain Resilience</span>
+                                        <span class="metric-value">0.1</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">External Risk Mitigation</span>
+                                        <span class="metric-value">0.0</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Factor Score</span>
+                                        <span class="metric-value">-0.15</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="positioning-position">
+                                <h5>Position</h5>
+                                <div class="position-metrics">
+                                    <div class="position-metric">
+                                        <div class="label">Capital<br>Stewardship</div>
+                                        <div class="value">High Risk</div>
+                                    </div>
+                                    <div class="position-metric">
+                                        <div class="label">Asset<br>Viability</div>
+                                        <div class="value">High Risk</div>
+                                    </div>
+                                    <div class="position-metric">
+                                        <div class="label">Structural<br>Vulnerability</div>
+                                        <div class="value">High</div>
+                                    </div>
+                                    <div class="position-metric">
+                                        <div class="label">Quadrant</div>
+                                        <div class="value quadrant" style="color:#E85A1B;">PR Circularity Death Zone</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="positioning-rationale">
+                                All three gates FAIL massively. ROIC -8.59% vs WACC 8.3%. FCF negative. Leverage 13.1x. HKM hydrogen project underfinanced, no ecosystem partners. Jindal deal insufficient (EUR 2bn vs EUR 8-12bn needed). Not regenerative transformation but controlled dissolution. Should not be considered for TR&sup2;S/TR&sup3;S until (a) ROIC > WACC, (b) FCF positive, (c) Debt/EBITDA < 3x.
+                            </div>
+                        </div>
+
+                        <div class="board-relevance">
+                            <p><strong>Board Relevance: REVIEW REQUIRED (REJECT for board compensation).</strong> ThyssenKrupp FAILS all three gates massively. This is a restructuring case, not a regenerative candidate. The framework correctly blocks any TR&sup2;S/TR&sup3;S eligibility. Stock collapsed -80% since 2019. Jindal deal at risk over pension liabilities. Recommendation: Do not include in Extended TRS compensation until financial fundamentals recover. Strengths: Marine Systems order backlog, steel capacity. Concerns: Deficient operations, debt burden, unclear decarbonisation financing, CEO volatility.</p>
+                        </div>
+
+                        <div style="margin-top:1.5rem;">
+                            <div style="background:#1a365d;padding:1rem 1.5rem;border-radius:8px 8px 0 0;">
+                                <h4 style="color:#E85A1B;margin:0;font-family:'Playfair Display',serif;">CEO Compensation Analysis</h4>
+                            </div>
+                            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;padding:1.5rem;">
+                                <p class="subtitle">Based on European Large-Cap Median Structure</p>
+                                <div class="comp-structure">
+                                    <div class="comp-item"><div class="label">Base Salary</div><div class="value">EUR 1.50M</div></div>
+                                    <div class="comp-item"><div class="label">STI (Fixed)</div><div class="value">EUR 1.50M</div></div>
+                                    <div class="comp-item"><div class="label">LTI (Variable)</div><div class="value">Tied to metric</div></div>
+                                    <div class="comp-item"><div class="label">LTI Cap</div><div class="value">EUR 3.00M</div></div>
+                                </div>
+                                <p class="scenario-label" style="color:#E85A1B;font-weight:700;">CES = 0: All Compensation Scenarios Blocked</p>
+                                <table class="scenario-table">
+                                    <tr><th>Metric</th><th>Return</th><th>Vesting %</th><th>LTI Payout</th><th>Total Comp</th></tr>
+                                    <tr><td class="metric-col">TRS (2019)</td><td>-42.44%</td><td>0%</td><td>EUR 0</td><td>EUR 3.00M</td></tr>
+                                    <tr><td class="metric-col">TRS (2024)</td><td>-40.97%</td><td>0%</td><td>EUR 0</td><td>EUR 3.00M</td></tr>
+                                    <tr><td class="metric-col">TR&sup2;S</td><td colspan="4" style="text-align:center;font-weight:600;color:#1a365d;">Blocked (CES = 0, Gate 1/2/3 FAIL)</td></tr>
+                                    <tr><td class="metric-col">TR&sup3;S</td><td colspan="4" style="text-align:center;font-weight:600;color:#1a365d;">Blocked (CES = 0, Gate 1/2/3 FAIL)</td></tr>
+                                </table>
+                                <p style="font-size:0.85rem;color:#64748b;margin-top:1rem;"><strong style="color:#1a365d;">Board insight:</strong> ThyssenKrupp demonstrates the framework's protective function: when all three gates fail, no extended metric compensation is possible regardless of sustainability narrative. The CEO receives only base + STI. The framework will only unlock TR&sup2;S/TR&sup3;S when ROIC > WACC, FCF positive, and leverage normalised.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End ThyssenKrupp Case -->
+
             </div>     </div>
 
+            </div>
+        </div>
         <div class="sector-accordion">
             <div class="sector-header" onclick="toggleSector(this)">
                 <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>Construction &amp; Built Environment</h2>
@@ -6566,6 +6840,9 @@
         </div>
 
         <!-- Technology & Digital Platforms Sector -->
+            </div>
+        </div>
+        </div>
         <div class="sector-accordion">
             <div class="sector-header" onclick="toggleSector(this)">
                 <h2><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" /></svg>Technology & Digital Platforms</h2>
@@ -6819,6 +7096,7 @@
                 </div>
                 <!-- End Siemens AG Case -->
             </div>
+        </div>
         </div>
 
     </main>
