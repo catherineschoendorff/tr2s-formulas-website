@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Rethink Value™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-brand: #1a365d;
+            --color-orange: #E85A1B;
+            --color-white: #ffffff;
+            --color-text-light: #5a6a7a;
+            --color-border: #e2e8f0;
+            
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--color-brand);
+            background-color: var(--color-white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 2rem;
+            z-index: 1000;
+            background: var(--color-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.25rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-brand);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        /* Hide mobile CTA on desktop */
+        .nav-cta-item {
+            display: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-orange);
+        }
+
+        /* Hamburger Menu */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--color-brand);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo-icon {
+                width: 60px;
+            }
+
+            .logo {
+                z-index: 1001;
+            }
+
+            .nav-toggle {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: auto;
+                max-height: 100vh;
+                flex-direction: column;
+                background: var(--color-brand);
+                padding: 5rem 2rem 2.5rem;
+                gap: 0;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+                border-radius: 0 0 0 12px;
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 1rem 0;
+                color: var(--color-white) !important;
+                font-size: 1.1rem;
+            }
+
+            .nav-links a:hover,
+            .nav-links a.active {
+                color: var(--color-orange) !important;
+            }
+
+            /* Mobile Nav CTA Button */
+            .nav-cta-item {
+                display: block !important;
+                border-bottom: none !important;
+                padding-top: 1.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .nav-cta-button {
+                display: block;
+                background: var(--color-orange) !important;
+                color: var(--color-white) !important;
+                padding: 1rem 2rem !important;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 1.1rem;
+            }
+
+            .nav-cta-button:hover {
+                background: #d14f15 !important;
+                color: var(--color-white) !important;
+            }
+
+            .nav-toggle.open span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .nav-toggle.open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .nav-toggle.open span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(26, 54, 93, 0.88) 0%,
+                rgba(26, 54, 93, 0.75) 40%,
+                rgba(26, 54, 93, 0.55) 100%
+            );
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 700px;
+            padding: 6rem 3rem 3rem;
+        }
+
+        .category {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-orange);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 400;
+            line-height: 1.2;
+            color: var(--color-white);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 em {
+            font-style: italic;
+        }
+
+        .hero-intro {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 500px;
+        }
+
+        /* Content */
+        .content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 2rem 5rem;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: var(--color-brand);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        p {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 400;
+            line-height: 1.85;
+            color: var(--color-brand);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Contact Form */
+        .contact-form-section {
+            margin: 2rem 0;
+            padding: 2.5rem;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                padding: 5rem 1.5rem 2rem;
+            }
+
+            .content {
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            .contact-form-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-brand);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #ffffff;
+            color: var(--color-brand);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-brand);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .required {
+            color: var(--color-orange);
+        }
+
+        .checkbox-group {
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 0.2rem;
+            accent-color: var(--color-brand);
+        }
+
+        .checkbox-label span {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: var(--color-orange);
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .form-note {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin: 0.5rem 0 1rem;
+        }
+
+        .submit-button {
+            align-self: flex-start;
+            background: var(--color-orange);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .submit-button:hover {
+            background: #d14e15;
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-white);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-legal {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--color-brand);
+        }
+
+        .footer-legal a {
+            color: var(--color-brand);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--color-orange);
+        }
+
+        .footer-legal span {
+            margin: 0 0.6rem;
+            color: #a0aec0;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-author {
+            font-size: 0.95rem;
+            color: var(--color-brand);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-meta {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value" class="logo-icon">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Why TRS and Beyond</a></li>
+                <li><a href="formulas.html">How It Works</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="portal.html">Portal</a></li>
+                <li class="nav-cta-item"><a href="contact.html" class="nav-cta-button">Find Out More</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-background">
+            <img src="images/u7742118559_Two_executives_in_strategic_discussion_at_confere_c607ea9c-79b1-4828-8786-3c59f1bd72d7_3.png" alt="Executive Discussion">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="category">Extended Shareholder Return</p>
+            <h1>Get in <em>Touch</em></h1>
+            <p class="hero-intro">Interested in learning more about the Extended Shareholder Return framework? We would be happy to hear from you.</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <main class="content">
+        <h2>Contact Us</h2>
+        <p>Whether you are a board member, CEO, investor, or researcher exploring new approaches to executive compensation and long-term value creation, we welcome your inquiry.</p>
+
+        <div class="contact-form-section">
+            <form action="https://formspree.io/f/xzdknrej" method="POST" class="contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name <span class="required">*</span></label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name <span class="required">*</span></label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="message">Message <span class="required">*</span></label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <div class="form-group full-width checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="privacy" required>
+                        <span>I agree to the processing of my data according to the <a href="privacy-contact-form.html" target="_blank">Privacy Policy</a>. <span class="required">*</span></span>
+                    </label>
+                </div>
+                <p class="form-note">Fields marked with <span class="required">*</span> are required.</p>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-legal">
+            <a href="impressum.html">Legal Notice</a>
+            <span>&#183;</span>
+            <a href="datenschutz.html">Privacy Policy</a>
+        </div>
+        <div class="footer-logo">
+            <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value Logo" class="logo-icon">
+        </div>
+        <p class="footer-author">Catherine Schoendorff, Business Strategist, Circular Economist</p>
+        <p class="footer-meta">&#169; 2025&#8211;2026 Catherine Schoendorff &#183; Extended Shareholder Return &#183; PhD Research</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>
