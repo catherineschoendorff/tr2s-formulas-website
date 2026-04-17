@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Analyzer | Rethink Value™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-brand: #1a365d;
+            --color-orange: #E85A1B;
+            --color-white: #ffffff;
+            --color-bg: #faf9f7;
+            --color-text-light: #64748b;
+            --color-border: #e2e8f0;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-brand);
+            line-height: 1.7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 2rem;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: var(--color-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.25rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav.scrolled .nav-links a {
+            color: var(--color-brand);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-orange);
+        }
+
+        /* Hamburger */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--color-white);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .nav-toggle span {
+            background: var(--color-brand);
+        }
+
+        @media (max-width: 900px) {
+            .nav-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: auto;
+                flex-direction: column;
+                background: var(--color-brand);
+                padding: 5rem 2rem 2.5rem;
+                gap: 0;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            }
+            .nav-links.open { right: 0; }
+            .nav-links li { border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .nav-links a {
+                display: block;
+                padding: 1rem 0;
+                color: var(--color-white) !important;
+            }
+            .nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .nav-toggle.open span:nth-child(2) { opacity: 0; }
+            .nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transform: scale(1);
+            transform-origin: center center;
+            animation: slowZoom 25s ease-out forwards;
+        }
+
+        @keyframes slowZoom {
+            0% { transform: scale(1.0); }
+            100% { transform: scale(1.15); }
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26,54,93,0.88) 0%, rgba(26,54,93,0.75) 40%, rgba(26,54,93,0.55) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 700px;
+            padding: 6rem 3rem 3rem;
+        }
+
+        @media (max-width: 900px) {
+            .hero-content {
+                justify-content: flex-start;
+                padding: 7rem 1.5rem 2rem;
+            }
+        }
+
+        .category {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-orange);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 400;
+            line-height: 1.2;
+            color: var(--color-white);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 em { font-style: italic; }
+
+        .hero-intro {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 550px;
+        }
+
+        /* Main Content */
+        main {
+            background: var(--color-white);
+        }
+
+        .content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Two Column Layout */
+        .analyzer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 900px) {
+            .analyzer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Input Panel */
+        .input-panel {
+            background: #f8f9fa;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .panel-title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            color: var(--color-brand);
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            margin-bottom: 2rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: var(--color-orange);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--color-brand);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-brand);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-brand);
+            background: var(--color-white);
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-orange);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Prompt Box */
+        .prompt-box {
+            background: var(--color-brand);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-orange);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #d14e15;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+        }
+
+        /* Analyze Button */
+        .analyze-btn {
+            width: 100%;
+            background: var(--color-brand);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .analyze-btn:hover {
+            background: #2d4a6f;
+            transform: translateY(-1px);
+        }
+
+        .analyze-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            position: sticky;
+            top: 100px;
+        }
+
+        @media (max-width: 900px) {
+            .results-panel {
+                position: static;
+            }
+        }
+
+        .matrix-container {
+            background: var(--color-brand);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .matrix-svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Results Cards */
+        .results-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .result-card.highlight {
+            border-color: var(--color-orange);
+            border-width: 2px;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-brand);
+        }
+
+        .result-value.pass { color: #22c55e; }
+        .result-value.fail { color: var(--color-orange); }
+
+        .result-description {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Gate Status */
+        .gates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .gate-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .gate-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .gate-icon.pass { color: var(--color-brand); }
+        .gate-icon.fail { color: var(--color-orange); }
+
+        .gate-name {
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+        }
+
+        /* Quadrant Badge */
+        .quadrant-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .quadrant-badge.stewards { background: rgba(34,197,94,0.15); color: #16a34a; }
+        .quadrant-badge.underpriced { background: rgba(59,130,246,0.15); color: #2563eb; }
+        .quadrant-badge.trap { background: rgba(232,90,27,0.15); color: var(--color-orange); }
+        .quadrant-badge.deathzone { background: rgba(239,68,68,0.15); color: #dc2626; }
+
+        /* Vulnerability Indicator */
+        .vulnerability-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .vulnerability-dot.low {
+            background: white;
+            border: 2px solid var(--color-brand);
+        }
+
+        .vulnerability-dot.medium {
+            background: white;
+            box-shadow: 0 0 0 3px var(--color-orange);
+        }
+
+        .vulnerability-dot.high {
+            background: var(--color-orange);
+        }
+
+        /* Placeholder State */
+        .placeholder-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--color-text-light);
+        }
+
+        .placeholder-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Research Findings Summary */
+        .findings-summary {
+            background: #f8f9fa;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .findings-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--color-brand);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .findings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .findings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .finding-item {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--color-orange);
+        }
+
+        .finding-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--color-text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .finding-value {
+            font-size: 0.95rem;
+            color: var(--color-brand);
+            line-height: 1.5;
+        }
+
+        .finding-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .findings-note {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-white);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-legal {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-legal a {
+            color: var(--color-brand);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-legal a:hover {
+            color: var(--color-orange);
+        }
+
+        .footer-legal span {
+            margin: 0 0.6rem;
+            color: #a0aec0;
+        }
+
+        .footer-logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            width: 80px;
+        }
+
+        .footer-author {
+            font-size: 0.95rem;
+            color: var(--color-brand);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-meta {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value" class="logo-icon">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Why TRS and Beyond</a></li>
+                <li><a href="formulas.html">How It Works</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="portal.html">Portal</a></li>
+                <li><a href="mechanics.html">Manual</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="calculator.html">Calculator</a></li>
+                <li><a href="analyzer.html" class="active">Analyzer</a></li>
+                <li class="nav-cta-item"><a href="contact.html" class="nav-cta-button">Find Out More</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-background">
+            <img src="images/Frontal_view_of_elegant_19th_century_bourgeois.png" alt="Elegant building facade">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="category">Analysis Tool</span>
+            <h1>Company <em>Analyzer</em></h1>
+            <p class="hero-intro">Position any company on the Extended Return Risk Assessment Matrix using the TR²S/TR³S framework.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <div class="content">
+            <div class="analyzer-grid">
+                <!-- Input Panel -->
+                <div class="input-panel">
+                    <h2 class="panel-title">Analyze a Company</h2>
+
+                    <!-- Step 1: Company Info -->
+                    <div class="step">
+                        <div class="step-header">
+                            <span class="step-number">1</span>
+                            <span class="step-title">Company Information</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" placeholder="e.g., Siemens AG">
+                        </div>
+                        <div class="form-group">
+                            <label for="sector">Sector</label>
+                            <select id="sector">
+                                <option value="">Select sector...</option>
+                                <option value="extractives">Extractives & Primary Materials</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="construction">Construction & Built Environment</option>
+                                <option value="consumer">Consumer Goods & Fashion</option>
+                                <option value="food">Food Systems</option>
+                                <option value="transport">Transport & Logistics</option>
+                                <option value="technology">Technology & Digital Platforms</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Perplexity Prompt -->
+                    <div class="step">
+                        <div class="step-header">
+                            <span class="step-number">2</span>
+                            <span class="step-title">Research with Perplexity</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem;">Copy this prompt and use it in Perplexity to gather the required data:</p>
+                        <div class="prompt-box" id="promptBox">For [COMPANY NAME], provide the following metrics with sources:
+
+CAPITAL STEWARDSHIP (X-Axis)
+1. ROIC (Return on Invested Capital) - last 3 years average
+2. WACC (Weighted Average Cost of Capital) - current estimate
+3. ROIC-WACC spread trend over 3 years
+
+ECONOMIC ASSET VIABILITY (Y-Axis)
+4. Primary Material Dependency - share of inputs from primary vs. secondary raw materials, recycled content percentage
+5. Resource Cost Exposure - sensitivity of margins to commodity price fluctuations, raw material cost as % of COGS
+6. Circular Revenue Share - revenue from repair, reuse, refurbishment, recycling, service models as % of total
+7. Asset Utilization - capex intensity trend, revenue per installed base, asset turnover
+
+Focus on concrete numbers from annual reports and sustainability reports. Cite sources.</div>
+                        <button class="copy-btn" id="copyPrompt" onclick="copyPrompt()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Prompt
+                        </button>
+                    </div>
+
+                    <!-- Step 2.5: Paste Results -->
+                    <div class="step">
+                        <div class="step-header">
+                            <span class="step-number" style="background: var(--color-brand);">2b</span>
+                            <span class="step-title">Paste Perplexity Results</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1rem;">Paste the Perplexity response below and click "Extract Data" to auto-fill the form:</p>
+                        <div class="form-group">
+                            <textarea id="perplexityResults" placeholder="Paste Perplexity response here..." style="min-height: 180px; font-size: 0.9rem;"></textarea>
+                        </div>
+                        <button class="copy-btn" onclick="parsePerplexityResults()" style="background: var(--color-brand);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Extract Data
+                        </button>
+                        <div id="extractionResult" style="margin-top: 1rem; display: none;"></div>
+                    </div>
+
+                    <!-- Step 3: Input Data -->
+                    <div class="step">
+                        <div class="step-header">
+                            <span class="step-number">3</span>
+                            <span class="step-title">Capital Stewardship (X-Axis)</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--color-text-light); margin-bottom: 1rem;">ROIC exceeding WACC = Low Capital Risk (right side of matrix)</p>
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label for="roic">ROIC (%)</label>
+                                <input type="number" id="roic" step="0.1" placeholder="e.g., 12.5">
+                                <span class="input-hint">3-year average</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="wacc">WACC (%)</label>
+                                <input type="number" id="wacc" step="0.1" placeholder="e.g., 8.0">
+                                <span class="input-hint">Current estimate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Asset Viability -->
+                    <div class="step">
+                        <div class="step-header">
+                            <span class="step-number">4</span>
+                            <span class="step-title">Economic Asset Viability (Y-Axis)</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--color-text-light); margin-bottom: 1rem;">Reduced primary resource dependency = Low Asset Risk (top of matrix)</p>
+                        
+                        <div class="form-group">
+                            <label for="primaryMaterialDep">1. Primary Material Dependency</label>
+                            <select id="primaryMaterialDep">
+                                <option value="">Select level...</option>
+                                <option value="low">Low - >50% secondary/recycled inputs</option>
+                                <option value="medium">Medium - 20-50% secondary/recycled inputs</option>
+                                <option value="high">High - <20% secondary/recycled inputs</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceCostExposure">2. Resource Cost Exposure</label>
+                            <select id="resourceCostExposure">
+                                <option value="">Select level...</option>
+                                <option value="low">Low - Margins stable despite commodity swings</option>
+                                <option value="medium">Medium - Some margin sensitivity to raw materials</option>
+                                <option value="high">High - Margins highly volatile with commodity prices</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="circularRevenue">3. Circular Revenue Share (%)</label>
+                            <input type="number" id="circularRevenue" step="1" placeholder="e.g., 25">
+                            <span class="input-hint">Revenue from repair, reuse, refurbishment, recycling, services</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assetUtilization">4. Asset Utilization Intensity</label>
+                            <select id="assetUtilization">
+                                <option value="">Select trend...</option>
+                                <option value="improving">Improving - Declining capex intensity, more value from existing assets</option>
+                                <option value="stable">Stable - Capex intensity holding steady</option>
+                                <option value="worsening">Worsening - Growth requires constant new asset creation</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="analyze-btn" id="analyzeBtn" onclick="analyzeCompany()">
+                        Analyze Company
+                    </button>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="results-panel">
+                    <!-- Matrix Visualization -->
+                    <div class="matrix-container">
+                        <svg class="matrix-svg" viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Matrix area -->
+                            <rect x="60" y="30" width="320" height="260" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                            
+                            <!-- Quadrant fills -->
+                            <rect x="60" y="30" width="160" height="130" fill="rgba(255,255,255,0.05)"/>
+                            <rect x="220" y="30" width="160" height="130" fill="rgba(255,255,255,0.08)"/>
+                            <rect x="60" y="160" width="160" height="130" fill="rgba(232,90,27,0.15)"/>
+                            <rect x="220" y="160" width="160" height="130" fill="rgba(232,90,27,0.08)"/>
+                            
+                            <!-- Grid lines -->
+                            <line x1="220" y1="30" x2="220" y2="290" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                            <line x1="60" y1="160" x2="380" y2="160" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                            
+                            <!-- Axes -->
+                            <line x1="60" y1="290" x2="380" y2="290" stroke="#ffffff" stroke-width="2"/>
+                            <line x1="60" y1="30" x2="60" y2="290" stroke="#ffffff" stroke-width="2"/>
+                            
+                            <!-- Axis labels -->
+                            <text x="220" y="320" text-anchor="middle" font-family="Source Sans 3" font-size="11" fill="#ffffff">Capital Stewardship</text>
+                            <text x="25" y="160" text-anchor="middle" font-family="Source Sans 3" font-size="11" fill="#ffffff" transform="rotate(-90, 25, 160)">Asset Viability</text>
+                            
+                            <!-- Quadrant labels -->
+                            <text x="140" y="75" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Undervalued Asset</text>
+                            <text x="140" y="90" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Risk Zone</text>
+                            
+                            <text x="300" y="75" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Resilient</text>
+                            <text x="300" y="90" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Transformation Zone</text>
+                            
+                            <text x="140" y="205" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Stranded Asset</text>
+                            <text x="140" y="220" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Risk Zone</text>
+                            
+                            <text x="300" y="205" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Commoditization</text>
+                            <text x="300" y="220" text-anchor="middle" font-family="Playfair Display" font-size="12" fill="#ffffff">Risk Zone</text>
+                            
+                            <!-- Sector Benchmark Points (hidden initially, shown when sector selected) -->
+                            <g id="benchmarkPoints"></g>
+                            
+                            <!-- Company Point (hidden initially) -->
+                            <g id="companyPoint" style="display: none;">
+                                <circle id="pointCircle" cx="0" cy="0" r="10" fill="#E85A1B" stroke="#ffffff" stroke-width="2"/>
+                                <text id="pointLabel" x="0" y="-15" text-anchor="middle" font-family="Source Sans 3" font-size="11" font-weight="600" fill="#ffffff"></text>
+                            </g>
+                        </svg>
+                        
+                        <!-- Vulnerability Legend -->
+                        <div class="matrix-legend" style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; color: var(--color-text-light);">
+                            <span style="font-weight: 600; color: var(--color-navy);">Structural Vulnerability:</span>
+                            <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span style="width: 12px; height: 12px; border-radius: 50%; background: #ffffff; border: 2px solid #1a365d; display: inline-block;"></span>
+                                <span>Low</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span style="width: 12px; height: 12px; border-radius: 50%; background: #ffffff; border: 3px solid #E85A1B; display: inline-block;"></span>
+                                <span>Medium</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span style="width: 12px; height: 12px; border-radius: 50%; background: #E85A1B; border: 2px solid #ffffff; display: inline-block;"></span>
+                                <span>High</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Findings Summary -->
+                    <div id="findingsSummary" class="findings-summary" style="display: none;">
+                        <h3 class="findings-title">Research Findings</h3>
+                        <div id="findingsContent"></div>
+                    </div>
+
+                    <!-- Results Cards -->
+                    <div class="results-cards" id="resultsCards">
+                        <div class="placeholder-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p>Enter company data and click "Analyze" to see results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-legal">
+            <a href="impressum.html">Legal Notice</a>
+            <span>&#183;</span>
+            <a href="datenschutz.html">Privacy Policy</a>
+        </div>
+        <div class="footer-logo">
+            <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value Logo">
+        </div>
+        <p class="footer-author">Catherine Schoendorff, Business Strategist, Circular Economist</p>
+        <p class="footer-meta">&#169; 2025-2026 Catherine Schoendorff &#183; Extended Shareholder Return &#183; PhD Research</p>
+    </footer>
+
+    <script>
+        // Portal authentication check
+        (function() {
+            if (sessionStorage.getItem('portalAuth') !== 'true') {
+                window.location.href = 'portal.html';
+            }
+        })();
+
+        // Mobile menu
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        // Nav scroll
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Benchmark companies by sector (from examples.html - updated positions)
+        const sectorBenchmarks = {
+            'consumer': [
+                { name: 'Pandora', cs: 62, av: 40, vulnerability: 'high' },
+                { name: 'Inditex', cs: 42, av: 72, vulnerability: 'medium' },
+                { name: 'H&M', cs: 35, av: 29, vulnerability: 'high' }
+            ],
+            'manufacturing': [
+                { name: 'Signify', cs: 65, av: 71, vulnerability: 'medium' },
+                { name: 'ABB', cs: 78, av: 48, vulnerability: 'medium' },
+                { name: 'Schneider', cs: 68, av: 73, vulnerability: 'medium' }
+            ],
+            'extractives': [
+                { name: 'ArcelorMittal', cs: 75, av: 33, vulnerability: 'high' },
+                { name: 'ThyssenKrupp', cs: 18, av: 27, vulnerability: 'high' },
+                { name: 'SSAB', cs: 80, av: 73, vulnerability: 'high' },
+                { name: 'Caterpillar', cs: 45, av: 40, vulnerability: 'high' }
+            ],
+            'construction': [
+                { name: 'Sika', cs: 78, av: 71, vulnerability: 'low' },
+                { name: 'Holcim', cs: 72, av: 59, vulnerability: 'high' },
+                { name: 'Saint-Gobain', cs: 45, av: 68, vulnerability: 'high' },
+                { name: 'Heidelberg', cs: 85, av: 60, vulnerability: 'high' }
+            ],
+            'food': [
+                { name: 'Unilever', cs: 28, av: 40, vulnerability: 'high' },
+                { name: 'Danone', cs: 22, av: 35, vulnerability: 'high' }
+            ],
+            'transport': [
+                { name: 'Renault', cs: 45, av: 55, vulnerability: 'high' },
+                { name: 'Rolls-Royce', cs: 72, av: 78, vulnerability: 'low' },
+                { name: 'Maersk', cs: 38, av: 58, vulnerability: 'high' },
+                { name: 'Volvo', cs: 48, av: 63, vulnerability: 'high' }
+            ],
+            'technology': [
+                { name: 'Siemens', cs: 48, av: 44, vulnerability: 'high' }
+            ]
+        };
+
+        // Show sector benchmarks when sector is selected
+        document.getElementById('sector').addEventListener('change', function() {
+            const sector = this.value;
+            showSectorBenchmarks(sector);
+        });
+
+        function showSectorBenchmarks(sector) {
+            const benchmarkGroup = document.getElementById('benchmarkPoints');
+            benchmarkGroup.innerHTML = '';
+            
+            if (!sector || !sectorBenchmarks[sector]) return;
+            
+            const companies = sectorBenchmarks[sector];
+            
+            companies.forEach(company => {
+                // Convert scores to SVG coordinates
+                const x = 60 + (company.cs / 100) * 320;
+                const y = 290 - (company.av / 100) * 260;
+                
+                // Determine fill based on vulnerability
+                let fill, stroke, strokeWidth;
+                if (company.vulnerability === 'low') {
+                    fill = 'rgba(255,255,255,0.6)';
+                    stroke = 'rgba(255,255,255,0.8)';
+                    strokeWidth = 2;
+                } else if (company.vulnerability === 'medium') {
+                    fill = 'rgba(255,255,255,0.6)';
+                    stroke = 'rgba(232,90,27,0.8)';
+                    strokeWidth = 3;
+                } else {
+                    fill = 'rgba(232,90,27,0.6)';
+                    stroke = 'rgba(255,255,255,0.8)';
+                    strokeWidth = 2;
+                }
+                
+                const point = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                point.innerHTML = `
+                    <circle cx="${x}" cy="${y}" r="7" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="0.7"/>
+                    <text x="${x}" y="${y - 10}" text-anchor="middle" font-family="Source Sans 3" font-size="9" fill="rgba(255,255,255,0.8)">${company.name}</text>
+                `;
+                benchmarkGroup.appendChild(point);
+            });
+        }
+
+        // Copy prompt
+        function copyPrompt() {
+            const companyName = document.getElementById('companyName').value || '[COMPANY NAME]';
+            const promptText = document.getElementById('promptBox').innerText.replace('[COMPANY NAME]', companyName);
+            navigator.clipboard.writeText(promptText);
+            
+            const btn = document.getElementById('copyPrompt');
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy Prompt';
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+
+        // Analyze company
+        function analyzeCompany() {
+            const companyName = document.getElementById('companyName').value;
+            const sector = document.getElementById('sector').value;
+            const roic = parseFloat(document.getElementById('roic').value);
+            const wacc = parseFloat(document.getElementById('wacc').value);
+            
+            // Asset Viability inputs
+            const primaryMaterialDep = document.getElementById('primaryMaterialDep').value;
+            const resourceCostExposure = document.getElementById('resourceCostExposure').value;
+            const circularRevenue = parseFloat(document.getElementById('circularRevenue').value) || 0;
+            const assetUtilization = document.getElementById('assetUtilization').value;
+
+            // Validation
+            if (!companyName || !sector || isNaN(roic) || isNaN(wacc) || !primaryMaterialDep || !resourceCostExposure || !assetUtilization) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Calculate positions
+            const spread = roic - wacc;
+            const capitalPosition = calculateCapitalPosition(spread);
+            const assetViabilityPosition = calculateAssetViabilityPosition(primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization);
+            const quadrant = determineQuadrant(capitalPosition, assetViabilityPosition);
+            const gatePass = roic > wacc;
+            
+            // Calculate formula inputs
+            const formulaInputs = calculateFormulaInputs(primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization);
+
+            // Update visualization
+            updateMatrix(capitalPosition, assetViabilityPosition, companyName, primaryMaterialDep, resourceCostExposure);
+            
+            // Update results
+            updateResults(companyName, quadrant, gatePass, spread, roic, wacc, primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization, formulaInputs);
+        }
+
+        function calculateCapitalPosition(spread) {
+            // X-axis position based on ROIC-WACC spread
+            // Direct mapping: spread determines position
+            // Spread <= 0: Left side (Gate FAIL)
+            // Spread > 0: Right side (Gate PASS)
+            
+            // Position ranges:
+            // Spread <= -5pp: 15 (far left)
+            // Spread -5 to 0: 25-45 (left)
+            // Spread 0 to +2pp: 50-55 (just right of center)
+            // Spread +2 to +5pp: 55-70 (right)
+            // Spread +5 to +10pp: 70-85 (far right)
+            // Spread > +10pp: 85-95 (maximum)
+            
+            if (spread <= -5) return 15;
+            if (spread <= 0) return 25 + (spread + 5) * 4; // -5 to 0 maps to 25-45
+            if (spread <= 2) return 50 + (spread * 2.5); // 0 to 2 maps to 50-55
+            if (spread <= 5) return 55 + ((spread - 2) * 5); // 2 to 5 maps to 55-70
+            if (spread <= 10) return 70 + ((spread - 5) * 3); // 5 to 10 maps to 70-85
+            return Math.min(95, 85 + (spread - 10)); // >10 caps at 95
+        }
+
+        function calculateFormulaInputs(primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization) {
+            // Map assessment questions to formula inputs
+            let rar, lve, crr, thetaAdj;
+            
+            // Primary Material Dependency → RAR
+            if (primaryMaterialDep === 'low') rar = 0.85;
+            else if (primaryMaterialDep === 'medium') rar = 0.50;
+            else rar = 0.15;
+            
+            // Asset Utilization Intensity → LVE
+            if (assetUtilization === 'improving') lve = 0.85;
+            else if (assetUtilization === 'stable') lve = 0.50;
+            else lve = 0.15;
+            
+            // Circular Revenue Share → CRR
+            crr = Math.min(1.0, circularRevenue / 50);
+            
+            // Resource Cost Exposure → θ adjustment
+            if (resourceCostExposure === 'low') thetaAdj = 0.05;
+            else if (resourceCostExposure === 'medium') thetaAdj = 0.00;
+            else thetaAdj = -0.05;
+            
+            return { rar, lve, crr, thetaAdj };
+        }
+
+        function calculateAssetViabilityPosition(primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization) {
+            // Count how many factors are "good" (low dependency/exposure, high circular, improving utilization)
+            let goodCount = 0;
+            let badCount = 0;
+            
+            // Primary Material Dependency: low = good, high = bad
+            if (primaryMaterialDep === 'low') goodCount++;
+            else if (primaryMaterialDep === 'high') badCount++;
+            
+            // Resource Cost Exposure: low = good, high = bad
+            if (resourceCostExposure === 'low') goodCount++;
+            else if (resourceCostExposure === 'high') badCount++;
+            
+            // Circular Revenue Share: >30% = good, <10% = bad
+            if (circularRevenue >= 30) goodCount++;
+            else if (circularRevenue < 10) badCount++;
+            
+            // Asset Utilization: improving = good, worsening = bad
+            if (assetUtilization === 'improving') goodCount++;
+            else if (assetUtilization === 'worsening') badCount++;
+            
+            // Position based on balance of good vs bad factors
+            // 4 good, 0 bad = 85 (top)
+            // 3 good, 0-1 bad = 70
+            // 2 good or mixed = 50 (middle)
+            // 1 good, 2-3 bad = 30
+            // 0 good, 3-4 bad = 15 (bottom)
+            
+            const netScore = goodCount - badCount;
+            
+            if (netScore >= 4) return 85;
+            if (netScore >= 3) return 75;
+            if (netScore >= 2) return 65;
+            if (netScore >= 1) return 55;
+            if (netScore >= 0) return 45;
+            if (netScore >= -1) return 35;
+            if (netScore >= -2) return 25;
+            return 15;
+        }
+
+        function calculateVulnerability(primaryMaterialDep, resourceCostExposure, spread) {
+            let riskScore = 0;
+            
+            if (primaryMaterialDep === 'high') riskScore += 2;
+            else if (primaryMaterialDep === 'medium') riskScore += 1;
+            
+            if (resourceCostExposure === 'high') riskScore += 2;
+            else if (resourceCostExposure === 'medium') riskScore += 1;
+            
+            if (spread < 2) riskScore += 1;
+            
+            if (riskScore >= 4) return 'high';
+            if (riskScore >= 2) return 'medium';
+            return 'low';
+        }
+
+        function determineQuadrant(capitalStewardship, assetViability) {
+            // Capital Stewardship > 50 means ROIC > WACC (positive spread)
+            // Asset Viability >= 50 means low primary resource dependency
+            if (capitalStewardship > 50 && assetViability >= 50) return 'stewards';
+            if (capitalStewardship <= 50 && assetViability >= 50) return 'underpriced';
+            if (capitalStewardship > 50 && assetViability < 50) return 'trap';
+            return 'deathzone';
+        }
+
+        function updateMatrix(capitalPosition, assetViabilityPosition, companyName, primaryMaterialDep, resourceCostExposure) {
+            const point = document.getElementById('companyPoint');
+            const circle = document.getElementById('pointCircle');
+            const label = document.getElementById('pointLabel');
+            
+            // Convert positions to SVG coordinates
+            // X: 60 (left) to 380 (right) = 320 width
+            // Y: 290 (bottom) to 30 (top) = 260 height
+            const x = 60 + (capitalPosition / 100) * 320;
+            const y = 290 - (assetViabilityPosition / 100) * 260;
+            
+            point.style.display = 'block';
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            label.setAttribute('x', x);
+            label.setAttribute('y', y - 15);
+            label.textContent = companyName.length > 15 ? companyName.substring(0, 12) + '...' : companyName;
+            
+            // Set color based on primary material dependency
+            if (primaryMaterialDep === 'low' && resourceCostExposure === 'low') {
+                circle.setAttribute('fill', '#ffffff');
+                circle.setAttribute('stroke', '#1a365d');
+                circle.setAttribute('stroke-width', '2');
+            } else if (primaryMaterialDep === 'high' || resourceCostExposure === 'high') {
+                circle.setAttribute('fill', '#E85A1B');
+                circle.setAttribute('stroke', '#ffffff');
+                circle.setAttribute('stroke-width', '2');
+            } else {
+                circle.setAttribute('fill', '#ffffff');
+                circle.setAttribute('stroke', '#E85A1B');
+                circle.setAttribute('stroke-width', '4');
+            }
+        }
+
+        function updateResults(companyName, quadrant, gatePass, spread, roic, wacc, primaryMaterialDep, resourceCostExposure, circularRevenue, assetUtilization, formulaInputs) {
+            const quadrantNames = {
+                'stewards': 'Resilient Transformation Zone',
+                'underpriced': 'Undervalued Asset Risk Zone',
+                'trap': 'Commoditization Risk Zone',
+                'deathzone': 'Stranded Asset Risk Zone'
+            };
+
+            const quadrantDescriptions = {
+                'stewards': 'Lowest risk profile. ROIC exceeds WACC and asset base is being preserved through reduced primary resource dependency.',
+                'underpriced': 'Capital discipline risk. Asset base is being preserved but ROIC at or below WACC despite sound transformation logic.',
+                'trap': 'Commoditization risk. ROIC exceeds WACC but high primary resource dependency creates margin erosion exposure.',
+                'deathzone': 'Highest risk zone. ROIC at or below WACC combined with high primary resource dependency. Stranded asset exposure.'
+            };
+
+            const resultsHTML = `
+                <div class="result-card highlight">
+                    <div class="result-label">Position</div>
+                    <div class="result-value">
+                        <span class="quadrant-badge ${quadrant}">${quadrantNames[quadrant]}</span>
+                    </div>
+                    <div class="result-description">${quadrantDescriptions[quadrant]}</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Capital Discipline Gate</div>
+                    <div class="result-value ${gatePass ? 'pass' : 'fail'}">${gatePass ? 'PASS' : 'FAIL'}</div>
+                    <div class="result-description">
+                        ROIC ${roic}% ${gatePass ? '>' : '≤'} WACC ${wacc}%<br>
+                        Spread: ${spread >= 0 ? '+' : ''}${spread.toFixed(2)}pp
+                    </div>
+                    <div class="result-description" style="margin-top: 0.5rem;">
+                        ${gatePass ? 'Extended return metrics (TR²S/TR³S) are eligible for LTI consideration.' : 'Extended return metrics blocked until ROIC exceeds WACC.'}
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Capital Stewardship (X-Axis)</div>
+                    <div style="margin-top: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-brand);">
+                            ROIC-WACC Spread: ${spread >= 0 ? '+' : ''}${spread.toFixed(2)}pp
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--color-text-light); margin-top: 0.25rem;">
+                            ROIC ${roic}% vs WACC ${wacc}%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Economic Asset Viability (Y-Axis)</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
+                        <div style="padding: 0.5rem; background: ${primaryMaterialDep === 'low' ? '#f0fdf4' : primaryMaterialDep === 'high' ? '#fef2f2' : '#fffbeb'}; border-radius: 4px;">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--color-text-light);">Material Dependency → RAR</div>
+                            <div style="font-weight: 600;">${primaryMaterialDep === 'low' ? 'Low' : primaryMaterialDep === 'high' ? 'High' : 'Medium'} <span style="color: var(--color-orange);">${formulaInputs.rar.toFixed(2)}</span></div>
+                        </div>
+                        <div style="padding: 0.5rem; background: ${resourceCostExposure === 'low' ? '#f0fdf4' : resourceCostExposure === 'high' ? '#fef2f2' : '#fffbeb'}; border-radius: 4px;">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--color-text-light);">Cost Exposure → θ adj.</div>
+                            <div style="font-weight: 600;">${resourceCostExposure === 'low' ? 'Low' : resourceCostExposure === 'high' ? 'High' : 'Medium'} <span style="color: var(--color-orange);">${formulaInputs.thetaAdj >= 0 ? '+' : ''}${formulaInputs.thetaAdj.toFixed(2)}</span></div>
+                        </div>
+                        <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--color-text-light);">Circular Revenue → CRR</div>
+                            <div style="font-weight: 600;">${circularRevenue}% <span style="color: var(--color-orange);">${formulaInputs.crr.toFixed(2)}</span></div>
+                        </div>
+                        <div style="padding: 0.5rem; background: ${assetUtilization === 'improving' ? '#f0fdf4' : assetUtilization === 'worsening' ? '#fef2f2' : '#fffbeb'}; border-radius: 4px;">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--color-text-light);">Asset Utilization → LVE</div>
+                            <div style="font-weight: 600;">${assetUtilization === 'improving' ? 'Improving' : assetUtilization === 'worsening' ? 'Worsening' : 'Stable'} <span style="color: var(--color-orange);">${formulaInputs.lve.toFixed(2)}</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Formula Inputs for Calculator</div>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+                        RAR = ${formulaInputs.rar.toFixed(2)} | LVE = ${formulaInputs.lve.toFixed(2)} | CRR = ${formulaInputs.crr.toFixed(2)} | θ adj = ${formulaInputs.thetaAdj >= 0 ? '+' : ''}${formulaInputs.thetaAdj.toFixed(2)}
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--color-text-light); margin-top: 0.5rem;">
+                        Use these values in the Calculator to compute TR²S and TR³S with sector-specific weights.
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Board Relevance</div>
+                    <div class="result-description" style="margin-top: 0;">
+                        ${generateBoardRelevance(quadrant, gatePass, companyName, primaryMaterialDep)}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultsCards').innerHTML = resultsHTML;
+        }
+
+        function generateBoardRelevance(quadrant, gatePass, companyName, primaryMaterialDep) {
+            if (quadrant === 'stewards' && gatePass) {
+                return `<strong>Full Proceed.</strong> ${companyName} passes the Capital Discipline Gate and demonstrates asset preservation. TR²S and TR³S metrics can be applied to LTI vesting.`;
+            } else if (quadrant === 'underpriced') {
+                return `<strong>Conditional Proceed.</strong> ${companyName} shows strong asset preservation but capital discipline needs attention. ${gatePass ? 'Gate passed, but monitor ROIC-WACC spread.' : 'Gate failed. Focus on restoring ROIC above WACC before applying extended metrics.'}`;
+            } else if (quadrant === 'trap') {
+                return `<strong>Strategic Review Required.</strong> ${companyName} demonstrates capital discipline but primary resource dependency remains high. Asset preservation must improve before extended metrics fully apply.`;
+            } else {
+                return `<strong>Action Required.</strong> ${companyName} shows both capital discipline gaps and high resource dependency. Focus on restoring ROIC above WACC and reducing primary material inputs.`;
+            }
+        }
+
+        // Parse Perplexity Results
+        function parsePerplexityResults() {
+            const text = document.getElementById('perplexityResults').value;
+            const resultDiv = document.getElementById('extractionResult');
+            
+            if (!text.trim()) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<p style="color: var(--color-orange);">Please paste Perplexity results first.</p>';
+                return;
+            }
+
+            // Extract data using regex patterns
+            const extracted = {
+                roic: null,
+                wacc: null,
+                circularRevenue: null,
+                primaryMaterialDep: null,
+                resourceCostExposure: null,
+                assetUtilization: null
+            };
+
+            // Helper function to extract average from range like "~3.2% to 3.8%" or "3.2% - 3.8%"
+            function extractValueOrRange(text, patterns) {
+                for (const pattern of patterns) {
+                    const match = text.match(pattern);
+                    if (match) {
+                        // Check if it's a range (two numbers)
+                        if (match[2]) {
+                            // Return average of range
+                            return (parseFloat(match[1]) + parseFloat(match[2])) / 2;
+                        }
+                        return parseFloat(match[1]);
+                    }
+                }
+                return null;
+            }
+
+            // ROIC patterns - handle ranges and table formats
+            const roicPatterns = [
+                /ROIC[^|]*\|\s*~?(\d+\.?\d*)%?\s*to\s*(\d+\.?\d*)%/i,
+                /ROIC[^|]*\|\s*~?(\d+\.?\d*)%/i,
+                /ROIC[^\d]*(\d+\.?\d*)%?\s*to\s*(\d+\.?\d*)%/i,
+                /ROIC[^\d]*(\d+\.?\d*)\s*%/i,
+                /return on invested capital[^\d]*(\d+\.?\d*)%/i,
+                /ROIC[^|]*is\s*(\d+\.?\d*)%/i,
+                /ROIC[^|]*estimate[^\d]*(\d+\.?\d*)%/i
+            ];
+            extracted.roic = extractValueOrRange(text, roicPatterns);
+
+            // WACC patterns - handle ranges and table formats
+            const waccPatterns = [
+                /WACC[^|]*\|\s*~?(\d+\.?\d*)%?\s*to\s*(\d+\.?\d*)%/i,
+                /WACC[^|]*\|\s*~?(\d+\.?\d*)%/i,
+                /WACC[^\d]*(\d+\.?\d*)%?\s*to\s*(\d+\.?\d*)%/i,
+                /WACC[^\d]*(\d+\.?\d*)\s*%/i,
+                /weighted average cost of capital[^\d]*(\d+\.?\d*)%/i,
+                /WACC[^|]*is\s*(\d+\.?\d*)%/i,
+                /WACC[^|]*estimate[^\d]*(\d+\.?\d*)%/i
+            ];
+            extracted.wacc = extractValueOrRange(text, waccPatterns);
+
+            // Circular/Service revenue patterns
+            const circularPatterns = [
+                /circular[^\d]*revenue[^\d]*(\d+\.?\d*)%/i,
+                /service[^\d]*revenue[^\d]*(\d+\.?\d*)%/i,
+                /services[^\d]*segment[^\d]*(\d+\.?\d*)\s*bn/i,
+                /aftermarket[^\d]*(\d+\.?\d*)%/i,
+                /recurring[^\d]*revenue[^\d]*(\d+\.?\d*)%/i,
+                /financial services[^\d]*(\d+\.?\d*)\s*bn/i
+            ];
+            extracted.circularRevenue = extractValueOrRange(text, circularPatterns);
+
+            const textLower = text.toLowerCase();
+
+            // Primary Material Dependency assessment - improved detection
+            const secondaryPatterns = [
+                /recycled[^\d]*content[^\d]*(\d+\.?\d*)%/i,
+                /secondary[^\d]*material[^\d]*(\d+\.?\d*)%/i,
+                /recycled[^\d]*input[^\d]*(\d+\.?\d*)%/i,
+                /(\d+\.?\d*)%[^\d]*recycl/i
+            ];
+            let secondaryPercent = extractValueOrRange(text, secondaryPatterns);
+            
+            if (secondaryPercent !== null) {
+                if (secondaryPercent > 50) extracted.primaryMaterialDep = 'low';
+                else if (secondaryPercent >= 20) extracted.primaryMaterialDep = 'medium';
+                else extracted.primaryMaterialDep = 'high';
+            } else if (textLower.includes('high recycled') || textLower.includes('majority secondary') || textLower.includes('circular inputs') || textLower.includes('closed loop')) {
+                extracted.primaryMaterialDep = 'low';
+            } else if (textLower.includes('increasing the use of secondary') || textLower.includes('some recycled') || textLower.includes('increasing secondary') || textLower.includes('secondary first')) {
+                extracted.primaryMaterialDep = 'medium';
+            } else if (textLower.includes('does not disclose') || textLower.includes('primarily virgin') || textLower.includes('raw material') || textLower.includes('commodity inputs') || textLower.includes('not publish')) {
+                extracted.primaryMaterialDep = 'high';
+            }
+
+            // Resource Cost Exposure assessment - improved detection
+            if (textLower.includes('margin stability') || textLower.includes('hedging') || textLower.includes('pass-through') || textLower.includes('pricing power') || textLower.includes('premium brand')) {
+                extracted.resourceCostExposure = 'low';
+            } else if (textLower.includes('reduce geopolitical risk') || textLower.includes('commodity exposure is material') || textLower.includes('some exposure') || textLower.includes('moderate sensitivity')) {
+                extracted.resourceCostExposure = 'medium';
+            } else if (textLower.includes('volatile margin') || textLower.includes('commodity exposed') || textLower.includes('raw material cost') || textLower.includes('high exposure')) {
+                extracted.resourceCostExposure = 'high';
+            }
+
+            // Asset Utilization assessment - improved detection
+            if (textLower.includes('investment in future projects to decrease') || textLower.includes('declining capex') || textLower.includes('asset-light') || textLower.includes('improving utilization') || textLower.includes('moderation in capex')) {
+                extracted.assetUtilization = 'improving';
+            } else if (textLower.includes('stable capex') || textLower.includes('steady investment') || textLower.includes('capex ratio of')) {
+                extracted.assetUtilization = 'stable';
+            } else if (textLower.includes('heavy capex') || textLower.includes('capital intensive') || textLower.includes('expansion') || textLower.includes('new capacity') || textLower.includes('capex up from')) {
+                extracted.assetUtilization = 'worsening';
+            }
+
+            // Auto-fill the form
+            let filledCount = 0;
+            
+            if (extracted.roic !== null) {
+                document.getElementById('roic').value = extracted.roic.toFixed(1);
+                filledCount++;
+            }
+            if (extracted.wacc !== null) {
+                document.getElementById('wacc').value = extracted.wacc.toFixed(1);
+                filledCount++;
+            }
+            if (extracted.circularRevenue !== null) {
+                document.getElementById('circularRevenue').value = extracted.circularRevenue;
+                filledCount++;
+            }
+            if (extracted.primaryMaterialDep) {
+                document.getElementById('primaryMaterialDep').value = extracted.primaryMaterialDep;
+                filledCount++;
+            }
+            if (extracted.resourceCostExposure) {
+                document.getElementById('resourceCostExposure').value = extracted.resourceCostExposure;
+                filledCount++;
+            }
+            if (extracted.assetUtilization) {
+                document.getElementById('assetUtilization').value = extracted.assetUtilization;
+                filledCount++;
+            }
+
+            // Extract key findings for display
+            const findings = extractFindings(text);
+            displayFindings(findings);
+
+            // Show results
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 6px; padding: 1rem; font-size: 0.9rem;">
+                    <strong style="color: #16a34a;">✓ Extracted ${filledCount} data points:</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem; color: var(--color-brand);">
+                        ${extracted.roic !== null ? `<li>ROIC: ${extracted.roic.toFixed(1)}%</li>` : '<li style="color: var(--color-text-light);">ROIC: not found</li>'}
+                        ${extracted.wacc !== null ? `<li>WACC: ${extracted.wacc.toFixed(1)}%</li>` : '<li style="color: var(--color-text-light);">WACC: not found</li>'}
+                        ${extracted.primaryMaterialDep ? `<li>Primary Material Dependency: ${extracted.primaryMaterialDep}</li>` : '<li style="color: var(--color-text-light);">Primary Material Dependency: not found</li>'}
+                        ${extracted.resourceCostExposure ? `<li>Resource Cost Exposure: ${extracted.resourceCostExposure}</li>` : '<li style="color: var(--color-text-light);">Resource Cost Exposure: not found</li>'}
+                        ${extracted.circularRevenue !== null ? `<li>Circular Revenue: ${extracted.circularRevenue}%</li>` : '<li style="color: var(--color-text-light);">Circular Revenue: not found</li>'}
+                        ${extracted.assetUtilization ? `<li>Asset Utilization: ${extracted.assetUtilization}</li>` : '<li style="color: var(--color-text-light);">Asset Utilization: not found</li>'}
+                    </ul>
+                    <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text-light);">Review and adjust values in Steps 3 and 4 below, then click "Analyze Company".</p>
+                </div>
+            `;
+        }
+
+        // Extract structured findings from Perplexity text
+        function extractFindings(text) {
+            const findings = {
+                financials: '',
+                circularInitiatives: '',
+                moatAssessment: '',
+                riskFactors: '',
+                keyInsight: ''
+            };
+
+            // Extract financial metrics section
+            const revenueMatch = text.match(/revenue[^.]*\d+\.?\d*\s*(bn|billion|EUR|USD)[^.]*\./gi);
+            const roicWaccMatch = text.match(/ROIC[^.]*WACC[^.]*\./gi) || text.match(/spread[^.]*favor[^.]*\./gi);
+            if (revenueMatch || roicWaccMatch) {
+                findings.financials = (revenueMatch ? revenueMatch[0] : '') + ' ' + (roicWaccMatch ? roicWaccMatch[0] : '');
+                findings.financials = findings.financials.trim().replace(/\s+/g, ' ');
+            }
+
+            // Extract circular initiatives
+            const circularMatches = text.match(/circular[^.]*\./gi) || [];
+            const recyclingMatches = text.match(/recycl[^.]*\./gi) || [];
+            const secondaryMatches = text.match(/secondary[^.]*material[^.]*\./gi) || [];
+            const allCircular = [...circularMatches, ...recyclingMatches, ...secondaryMatches];
+            if (allCircular.length > 0) {
+                // Take the most informative sentences (up to 2)
+                findings.circularInitiatives = allCircular
+                    .filter(s => s.length > 50)
+                    .slice(0, 2)
+                    .join(' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            // Extract moat assessment
+            const moatMatches = text.match(/moat[^.]*\./gi) || [];
+            const defensibleMatches = text.match(/defensible[^.]*\./gi) || [];
+            const brandMatches = text.match(/brand[^.]*equity[^.]*\./gi) || [];
+            const allMoat = [...moatMatches, ...defensibleMatches, ...brandMatches];
+            if (allMoat.length > 0) {
+                findings.moatAssessment = allMoat[0].replace(/\s+/g, ' ').trim();
+            }
+
+            // Extract risk factors
+            const riskMatches = text.match(/risk[^.]*\./gi) || [];
+            const strandingMatches = text.match(/stranding[^.]*\./gi) || [];
+            const transitionMatches = text.match(/transition[^.]*\./gi) || [];
+            const allRisk = [...strandingMatches, ...riskMatches.filter(r => r.toLowerCase().includes('asset') || r.toLowerCase().includes('obsolescence'))];
+            if (allRisk.length > 0) {
+                findings.riskFactors = allRisk[0].replace(/\s+/g, ' ').trim();
+            }
+
+            // Extract key insight (practical readout or summary)
+            const insightMatches = text.match(/looks like[^.]*\./gi) || text.match(/interpretation[^.]*\./gi) || text.match(/readout[^.]*\./gi);
+            if (insightMatches) {
+                findings.keyInsight = insightMatches[0].replace(/\s+/g, ' ').trim();
+            }
+
+            return findings;
+        }
+
+        // Display findings in the summary panel
+        function displayFindings(findings) {
+            const summaryDiv = document.getElementById('findingsSummary');
+            const contentDiv = document.getElementById('findingsContent');
+            
+            const companyName = document.getElementById('companyName').value || 'Company';
+
+            let html = '<div class="findings-grid">';
+
+            if (findings.financials) {
+                html += `
+                    <div class="finding-item">
+                        <div class="finding-label">Capital Discipline (ROIC/WACC)</div>
+                        <div class="finding-value">${findings.financials.substring(0, 200)}${findings.financials.length > 200 ? '...' : ''}</div>
+                    </div>
+                `;
+            }
+
+            if (findings.moatAssessment) {
+                html += `
+                    <div class="finding-item">
+                        <div class="finding-label">Competitive Position</div>
+                        <div class="finding-value">${findings.moatAssessment.substring(0, 200)}${findings.moatAssessment.length > 200 ? '...' : ''}</div>
+                    </div>
+                `;
+            }
+
+            if (findings.circularInitiatives) {
+                html += `
+                    <div class="finding-item full-width">
+                        <div class="finding-label">Asset Preservation Evidence</div>
+                        <div class="finding-value">${findings.circularInitiatives.substring(0, 300)}${findings.circularInitiatives.length > 300 ? '...' : ''}</div>
+                    </div>
+                `;
+            }
+
+            if (findings.riskFactors) {
+                html += `
+                    <div class="finding-item full-width">
+                        <div class="finding-label">Resource & Cost Exposure</div>
+                        <div class="finding-value">${findings.riskFactors.substring(0, 250)}${findings.riskFactors.length > 250 ? '...' : ''}</div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            if (findings.keyInsight) {
+                html += `<div class="findings-note"><strong>Board Discussion Point:</strong> ${findings.keyInsight}</div>`;
+            }
+
+            contentDiv.innerHTML = html;
+            summaryDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
