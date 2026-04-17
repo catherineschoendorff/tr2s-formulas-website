@@ -1,0 +1,3549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extended Shareholder Return Calculator | Rethink Value™</title>
+    
+    <!-- Portal Authentication Check -->
+    <script>
+        (function() {
+            if (sessionStorage.getItem('calculatorAuth') !== 'true') {
+                window.location.href = 'portal.html';
+            }
+        })();
+    </script>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Calculate TR²S and TR³S extended shareholder returns. Assess capital stewardship, circular asset allocation, and CEO compensation scenarios for European incumbent firms.">
+    <meta name="keywords" content="extended shareholder return, TR2S, TR3S, circular economy, regenerative business, CEO compensation, capital stewardship, ESG metrics, sustainable finance">
+    <meta name="author" content="Catherine Schoendorff">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Extended Shareholder Return Calculator | Rethink Value™">
+    <meta property="og:description" content="Calculate TR²S and TR³S extended shareholder returns. Assess capital stewardship and circular asset allocation for strategic governance.">
+    <meta property="og:url" content="https://catherineschoendorff.github.io/tr2s-formulas-website/calculator.html">
+    <meta property="og:site_name" content="Rethink Value™">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Extended Shareholder Return Calculator | Rethink Value™">
+    <meta name="twitter:description" content="Calculate TR²S and TR³S extended shareholder returns for circular economy governance.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://catherineschoendorff.github.io/tr2s-formulas-website/calculator.html">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-navy: #1a365d;
+            --color-navy-light: #2d4a6f;
+            --color-orange: #E85A1B;
+            --color-orange-hover: #c94d16;
+            --color-white: #ffffff;
+            --color-bg: #ffffff;
+            --color-grey-box: #f8f9fa;
+            --color-border: #e2e8f0;
+            --color-text: #1a365d;
+            --color-text-light: #5a6a7a;
+            --color-success: #38a169;
+            --color-danger: #c53030;
+            --color-warning: #d69e2e;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        /* Navigation - always white background (no hero on this page) */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.25rem 2rem;
+            background: var(--color-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.25rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-navy);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        /* Hide mobile CTA on desktop */
+        .nav-cta-item {
+            display: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-orange);
+        }
+
+        /* Hamburger Menu */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--color-navy);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo-icon {
+                width: 60px;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: auto;
+                max-height: 100vh;
+                flex-direction: column;
+                background: var(--color-navy);
+                padding: 5rem 2rem 2.5rem;
+                gap: 0;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+                border-radius: 0 0 0 12px;
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 1rem 0;
+                color: var(--color-white) !important;
+                font-size: 1.1rem;
+            }
+
+            .nav-links a:hover,
+            .nav-links a.active {
+                color: var(--color-orange) !important;
+            }
+
+            /* Mobile Nav CTA Button */
+            .nav-cta-item {
+                display: block !important;
+                border-bottom: none !important;
+                padding-top: 1.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .nav-cta-button {
+                display: block;
+                background: var(--color-orange) !important;
+                color: var(--color-white) !important;
+                padding: 1rem 2rem !important;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 1.1rem;
+            }
+
+            .nav-cta-button:hover {
+                background: #d14f15 !important;
+                color: var(--color-white) !important;
+            }
+
+            /* Hamburger animation when open */
+            .nav-toggle.open span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .nav-toggle.open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .nav-toggle.open span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 2rem 3rem;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                padding: 120px 1rem 2rem;
+            }
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 400;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--color-text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-btn {
+            padding: 0.875rem 2rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid var(--color-navy);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--color-white);
+            color: var(--color-navy);
+        }
+
+        .mode-btn:hover {
+            background: var(--color-grey-box);
+        }
+
+        .mode-btn.active {
+            background: var(--color-navy);
+            color: var(--color-white);
+        }
+
+        /* Prompt Helper */
+        .prompt-helper {
+            background: var(--color-grey-box);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .prompt-helper.hidden {
+            display: none;
+        }
+
+        .prompt-helper-content {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .prompt-helper-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--color-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .prompt-helper-content p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin: 0;
+        }
+
+        .prompt-helper-note {
+            font-size: 0.8rem;
+            color: #8a9bb3;
+            margin-top: 0.5rem !important;
+            flex-basis: 100%;
+        }
+
+        .prompt-helper-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--color-orange);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-orange-hover);
+        }
+
+        .btn-navy {
+            background: var(--color-navy);
+            color: var(--color-white);
+        }
+
+        .btn-navy:hover {
+            background: var(--color-navy-light);
+        }
+
+        .btn-secondary {
+            background: var(--color-white);
+            color: var(--color-navy);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-grey-box);
+        }
+
+        .copy-feedback {
+            display: none;
+            color: var(--color-success);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copy-feedback.show {
+            display: inline;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--color-white);
+            border-radius: 12px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--color-navy);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--color-text-light);
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--color-navy);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-body pre {
+            background: var(--color-grey-box);
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            border: 1px solid var(--color-border);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        /* Calculator Grid */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 900px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-header .step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--color-navy);
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--color-navy);
+        }
+
+        .card-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-weight: 400;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row-3 {
+                gap: 0.5rem;
+            }
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--color-navy);
+        }
+
+        label .hint {
+            font-weight: 400;
+            color: var(--color-text-light);
+        }
+
+        label .required {
+            color: var(--color-orange);
+        }
+
+        .label-subtext {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #8a9bb3;
+            margin-top: -0.2rem;
+            margin-bottom: 0.35rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            color: var(--color-navy);
+            background: var(--color-white);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--color-orange);
+            box-shadow: 0 0 0 3px rgba(232, 90, 27, 0.15);
+        }
+
+        input:read-only {
+            background: var(--color-grey-box);
+            color: var(--color-text-light);
+        }
+
+        select:required:invalid {
+            color: var(--color-text-light);
+        }
+
+        /* Sliders */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            padding: 0;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--color-border);
+            border-radius: 3px;
+            border: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-orange);
+            cursor: pointer;
+            border: 2px solid var(--color-white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--color-navy);
+            font-size: 0.95rem;
+        }
+
+        /* Coefficients Display */
+        .coefficients-display {
+            background: var(--color-grey-box);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .coefficients-display p {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .coefficients-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .coef-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .coef-item .coef-label {
+            font-weight: 600;
+            color: var(--color-navy);
+        }
+
+        .coef-item .coef-value {
+            color: var(--color-text-light);
+        }
+
+        /* Gate Status */
+        .gate-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 50px;
+            gap: 0.75rem;
+            align-items: end;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .gate-row .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gate-row .gate-status {
+            align-self: end;
+            margin-bottom: 8px;
+            justify-self: center;
+        }
+
+        .gate-row:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        @media (max-width: 500px) {
+            .gate-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .gate-row .gate-status {
+                grid-column: 1 / -1;
+                justify-self: center;
+                margin-bottom: 0;
+            }
+        }
+
+        .gate-status {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            cursor: help;
+        }
+
+        .gate-status::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--color-navy);
+            color: var(--color-white);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 10;
+        }
+
+        .gate-status:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gate-status.pass {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .gate-status.fail {
+            background: var(--color-danger);
+            color: var(--color-white);
+        }
+
+        .gate-status.pending {
+            background: var(--color-border);
+            color: var(--color-text-light);
+        }
+
+        /* CES Display */
+        .ces-result-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .ces-display {
+            flex: 1;
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+        }
+
+        .ces-display .ces-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .ces-display .ces-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .ces-gate-help {
+            flex-shrink: 0;
+        }
+
+        /* TR²S Result Display */
+        .tr2s-result-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tr2s-result {
+            flex: 1;
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+        }
+
+        .tr2s-result .tr2s-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            color: var(--color-text-light);
+        }
+
+        .tr2s-result .tr2s-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-navy);
+        }
+
+        /* Dynamic weight display */
+        .weight-display {
+            font-size: 0.8rem;
+            color: var(--color-orange);
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Slider explanation text */
+        .slider-explanation {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+        }
+
+        /* Slider scale labels */
+        .slider-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+            margin-top: 0.25rem;
+            padding: 0 0.25rem;
+        }
+
+        /* SCF Grid (Card 5) */
+        .scf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .scf-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .scf-explanation {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .scf-explanation .formula-explanation {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+        }
+
+        .formula-line {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--color-navy);
+            margin: 0;
+            text-align: center;
+        }
+
+        .formula-desc {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin: 0.25rem 0 1rem 0;
+            text-align: center;
+        }
+
+        .formula-desc:last-child {
+            margin-bottom: 0;
+        }
+
+        /* RI and RE Result Boxes */
+        .ri-re-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ri-result-box,
+        .re-result-box {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .ri-label,
+        .re-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .ri-value,
+        .re-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-navy);
+        }
+
+        .result-explanation {
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin: 0.5rem 0 0 0;
+        }
+
+        /* Card 6: Compensation Structure */
+        .comp-intro {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .comp-boxes {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .comp-box {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .comp-box-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .comp-box-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .comp-box-input input {
+            width: 80px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-navy);
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .comp-box-input select {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-navy);
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .comp-box-unit {
+            font-size: 1rem;
+            color: var(--color-navy);
+            font-weight: 600;
+        }
+
+        .comp-box-hint {
+            font-size: 0.7rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Vesting Section */
+        .vesting-section {
+            margin-bottom: 2rem;
+        }
+
+        .vesting-section h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .vesting-intro {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .vesting-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .vesting-table th {
+            background: var(--color-navy);
+            color: white;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .vesting-table th .hint {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .vesting-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .vesting-table td.metric-name {
+            font-weight: 700;
+            color: var(--color-navy);
+            text-align: left;
+        }
+
+        .vesting-table input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* Metric Selection */
+        .metric-selection {
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-selection h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .selection-intro {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .metric-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .metric-option:hover {
+            background: #f1f5f9;
+        }
+
+        .metric-option input[type="radio"] {
+            margin-bottom: 0.5rem;
+            accent-color: var(--color-navy);
+        }
+
+        .metric-option:has(input:checked) {
+            background: #f1f5f9;
+            border-color: var(--color-navy);
+        }
+
+        .metric-option:has(input:checked) .metric-label {
+            color: var(--color-navy);
+        }
+
+        .metric-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-navy);
+        }
+
+        .metric-desc {
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .comp-boxes {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .metric-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card 6: Strategic Map styles */
+        .strategic-map-card {
+            background: var(--color-navy);
+            color: white;
+        }
+
+        .strategic-map-card .card-header h2 {
+            color: white;
+        }
+
+        .strategic-map-card .card-header .step {
+            background: var(--color-orange);
+            color: white;
+        }
+
+        .strategic-map-card .card-help {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .map-intro {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .map-section-title {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .map-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .map-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        .map-value {
+            font-weight: 600;
+            color: white;
+        }
+
+        .map-value.pass {
+            color: #9ae6b4;
+        }
+
+        .map-value.fail {
+            color: #feb2b2;
+        }
+
+        .map-value.positive {
+            color: #9ae6b4;
+        }
+
+        .map-value.negative {
+            color: #feb2b2;
+        }
+
+        .position-box {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .position-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .position-item {
+            text-align: center;
+        }
+
+        .pos-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .pos-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .pos-value.quadrant {
+            font-size: 1rem;
+        }
+
+        .interpretation {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        /* Card 7: Scenarios Section */
+        .scenarios-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .scenarios-section h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .scenarios-intro {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .scenarios-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scenarios-table th {
+            background: var(--color-navy);
+            color: white;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .scenarios-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .scenarios-table td.metric-name {
+            font-weight: 700;
+            color: var(--color-navy);
+            text-align: left;
+        }
+
+        .scenarios-table .vs-trs {
+            color: var(--color-orange);
+            font-weight: 600;
+        }
+
+        /* Selected metric row highlighting */
+        .scenario-row {
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+
+        .scenario-row.selected {
+            opacity: 1;
+            background: #f8f9fa;
+        }
+
+        .scenario-row.selected td {
+            font-weight: 600;
+        }
+
+        .scenario-row.selected td.metric-name {
+            color: var(--color-navy);
+        }
+
+        /* Print Buttons - Orange, no icons */
+        .print-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .print-row .btn-primary {
+            background: var(--color-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .print-row .btn-primary:hover {
+            background: #d14e17;
+        }
+
+        @media (max-width: 768px) {
+            .map-grid {
+                grid-template-columns: 1fr;
+            }
+            .position-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* TR³S Result Display */
+        .tr3s-result-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tr3s-result {
+            flex: 1;
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+        }
+
+        .tr3s-result .tr3s-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            color: var(--color-text-light);
+        }
+
+        .tr3s-result .tr3s-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-navy);
+        }
+
+        @media (max-width: 768px) {
+            .scf-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ces-display.pass {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        }
+
+        .ces-display.fail {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+        }
+
+        .ces-display.pass .ces-label {
+            color: #22543d;
+        }
+
+        .ces-display.fail .ces-label {
+            color: #742a2a;
+        }
+
+        .ces-display.pass .ces-value {
+            color: #276749;
+        }
+
+        .ces-display.fail .ces-value {
+            color: #c53030;
+        }
+
+        .ces-explanation {
+            font-size: 0.8rem;
+            color: #8a9bb3;
+            text-align: left;
+            margin-top: 1rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Formula explanations */
+        .formula-explanation {
+            font-size: 0.85rem;
+            color: var(--color-navy);
+            font-family: var(--font-heading);
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .formula-text {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            text-align: left;
+            margin-top: 0.75rem;
+        }
+
+        .formula-note {
+            font-size: 0.8rem;
+            color: #c53030;
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* AVF Grid Layout */
+        .avf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .avf-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .avf-sliders {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .avf-explanation {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .avf-intro {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+
+        .weights-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .weights-table th,
+        .weights-table td {
+            padding: 0.5rem 0.4rem;
+            text-align: center;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .weights-table th {
+            background: var(--color-navy);
+            color: white;
+            font-weight: 600;
+        }
+
+        .weights-table th:first-child,
+        .weights-table td:first-child {
+            text-align: left;
+        }
+
+        .weights-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .weights-table .separator {
+            width: 2px;
+            padding: 0;
+            background: var(--color-border);
+        }
+
+        .weights-table thead .separator {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .avf-board-note {
+            font-size: 0.8rem;
+            color: #8a9bb3;
+            text-align: left;
+            margin-top: 1rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Card header with help icon */
+        .card-header {
+            position: relative;
+        }
+
+        .card-help {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            font-size: 0.9rem;
+        }
+
+        /* Slider with help layout */
+        .slider-with-help .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-help {
+            width: 28px;
+            height: 28px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* RM header with help */
+        .rm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rm-header p {
+            margin: 0;
+        }
+
+        /* Print Buttons Row */
+        .print-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        /* Output Section */
+        .output-section {
+            margin-top: 3rem;
+        }
+
+        .output-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: var(--color-navy);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Strategic Map Panel */
+        /* CEO Compensation Panel */
+        .compensation-panel {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .compensation-panel h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .compensation-panel .panel-subtitle {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Comp Structure */
+        .comp-structure {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .comp-structure {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .comp-box {
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .comp-box .comp-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .comp-box .comp-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-navy);
+        }
+
+        /* Scenarios Table */
+        .scenarios-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--color-navy);
+            margin-bottom: 1rem;
+        }
+
+        .scenarios-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .scenarios-table th {
+            background: var(--color-navy);
+            color: var(--color-white);
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scenarios-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .scenarios-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .scenarios-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-navy);
+        }
+
+        .scenarios-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .scenarios-table tbody tr:hover {
+            background: var(--color-grey-box);
+        }
+
+        .scenarios-table .metric-name {
+            font-weight: 600;
+        }
+
+        .scenarios-table .positive {
+            color: var(--color-success);
+        }
+
+        .scenarios-table .negative {
+            color: var(--color-danger);
+        }
+
+        .scenarios-table .vs-trs {
+            font-weight: 600;
+            color: var(--color-success);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-white);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-legal {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--color-navy);
+        }
+
+        .footer-legal a {
+            color: var(--color-navy);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--color-orange);
+        }
+
+        .footer-legal span {
+            margin: 0 0.6rem;
+            color: #a0aec0;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-author {
+            font-size: 0.95rem;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-meta {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        /* Print Styles */
+        @media print {
+            nav, .mode-toggle, .prompt-helper, .print-row, footer, .nav-toggle, .btn {
+                display: none !important;
+            }
+
+            main {
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .card, .strategic-map-panel, .compensation-panel {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .strategic-map-panel {
+                background: var(--color-navy) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .print-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--color-navy);
+            }
+
+            .print-header img {
+                width: 50px;
+                margin-bottom: 0.5rem;
+            }
+
+            .print-header h1 {
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                color: var(--color-navy);
+                margin-bottom: 0.25rem;
+            }
+
+            .print-header p {
+                color: var(--color-text-light);
+                font-size: 0.9rem;
+            }
+
+            .print-footer {
+                display: block !important;
+                text-align: center;
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--color-border);
+                font-size: 0.8rem;
+                color: var(--color-text-light);
+            }
+        }
+
+        .print-header, .print-footer {
+            display: none;
+        }
+
+        /* Validation Error */
+        .validation-error {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #742a2a;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .validation-error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Check -->
+    <script>
+        if (sessionStorage.getItem('calculatorAuth') !== 'true') {
+            window.location.href = 'portal.html';
+        }
+    </script>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value" class="logo-icon">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Why TRS and Beyond</a></li>
+                <li><a href="formulas.html">How It Works</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="portal.html">Portal</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="mechanics.html">Manual</a></li>
+                <li><a href="calculator.html" class="active">Calculator</a></li>
+                <li class="nav-cta-item"><a href="contact.html" class="nav-cta-button">Find Out More</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Print Header (only visible when printing) -->
+    <div class="print-header">
+        <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value">
+        <h1>Extended Shareholder Return Calculator</h1>
+        <p>Generated: <span id="printDate"></span></p>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <h1>Extended Return Calculator</h1>
+            <p>Capital Stewardship Assessment</p>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="modePublic" onclick="setMode('public')">Public Company</button>
+            <button class="mode-btn" id="modePrivate" onclick="setMode('private')">Private Company</button>
+        </div>
+
+        <!-- Perplexity Prompt Helper -->
+        <div class="prompt-helper" id="promptHelper">
+            <div class="prompt-helper-content">
+                <h3>Need help collecting data?</h3>
+                <p>Use our Perplexity Deep Research prompt to gather all required inputs for any public company.</p>
+            </div>
+            <div class="prompt-helper-buttons">
+                <button class="btn btn-navy" onclick="openPromptModal()">View Prompt</button>
+                <button class="btn btn-primary" onclick="copyPrompt()">Copy to Clipboard</button>
+                <button class="btn btn-primary" onclick="openImportModal()">Import Data</button>
+                <button class="btn btn-secondary" id="resetImportBtn" onclick="resetImport()" style="display: none;">Reset Import</button>
+                <span class="copy-feedback" id="copyFeedback">Copied!</span>
+            </div>
+            <p class="prompt-helper-note" style="width: 100%; margin-top: 1rem;"><em>No data is transmitted. The prompt is copied locally to your clipboard for use on external platforms.</em></p>
+        </div>
+
+        <!-- Validation Error -->
+        <div class="validation-error" id="validationError">
+            Please select a sector to proceed with calculations.
+        </div>
+
+        <!-- Calculator Grid -->
+        <div class="calculator-grid">
+
+            <!-- Card 1: Company -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="step">1</span>
+                    <h2>Company</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Company Name <span class="required">*</span></label>
+                        <input type="text" id="companyName" placeholder="e.g., Pandora A/S" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ticker <span class="required">*</span></label>
+                        <input type="text" id="ticker" placeholder="e.g., PNDORA.CO" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Year <span class="required">*</span></label>
+                        <input type="text" id="year" placeholder="e.g., 2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Currency <span class="required">*</span></label>
+                        <select id="currency" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="EUR">EUR</option>
+                            <option value="CHF">CHF</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="DKK">DKK</option>
+                            <option value="SEK">SEK</option>
+                            <option value="NOK">NOK</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Sector <span class="required">*</span></label>
+                        <select id="sector" onchange="applySectorPresets()" required>
+                            <option value="" disabled selected>Select sector...</option>
+                            <option value="extractives">Extractives & Primary Materials</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="construction">Construction & Built Environment</option>
+                            <option value="consumer">Consumer Goods & Fashion</option>
+                            <option value="food">Food Systems</option>
+                            <option value="transport">Transport & Logistics</option>
+                            <option value="technology">Technology & Digital Platforms</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <!-- Empty for alignment -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Stock Data (was Card 3) -->
+            <div class="card" id="stockDataCard">
+                <div class="card-header">
+                    <span class="step">2</span>
+                    <h2>Stock Data <span class="subtitle">with TRS Calculation</span></h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>P₀ <span class="hint">Opening price</span></label>
+                        <input type="number" id="p0" step="0.01" placeholder="e.g., 236.50" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>P₁ <span class="hint">Closing price</span></label>
+                        <input type="number" id="p1" step="0.01" placeholder="e.g., 340.00" oninput="calculate()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>D <span class="hint">Dividends per share</span></label>
+                        <input type="number" id="dividends" step="0.01" placeholder="e.g., 3.60" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <input type="text" id="stockCurrency" readonly style="background: #f1f5f9; cursor: not-allowed;" value="-">
+                        <span class="label-subtext">From Company settings</span>
+                    </div>
+                </div>
+                <div class="coefficients-display">
+                    <p>Calculated TRS:</p>
+                    <div class="coefficients-grid">
+                        <div class="coef-item"><span class="coef-label">TRS:</span> <span class="coef-value" id="trsDisplay">-</span></div>
+                    </div>
+                </div>
+                <p class="formula-text">Total Return to Shareholders formula: TRS = (P₁ - P₀ + D) / P₀</p>
+                <p class="formula-note" id="trsNote" style="display: none;">Note: When P₁ < P₀, FVF = 0 regardless of calculated TRS (governance floor).</p>
+            </div>
+
+            <!-- Card 3: Capital Discipline Gate (was Card 2) - Full Width -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <span class="step">3</span>
+                    <h2>Capital Discipline Gate</h2>
+                </div>
+                
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>ROIC <span class="hint">%</span></label>
+                        <span class="label-subtext">Return on Invested Capital</span>
+                        <input type="number" id="roic" step="0.01" placeholder="e.g., 25.13" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>WACC <span class="hint">%</span></label>
+                        <span class="label-subtext">Weighted Average Cost of Capital</span>
+                        <input type="number" id="wacc" step="0.01" placeholder="e.g., 10.00" oninput="calculateGates()">
+                    </div>
+                    <div class="gate-status pending" id="gate1Status" data-tooltip="Gate 1: ROIC must exceed WACC">?</div>
+                </div>
+
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>FCF <span class="hint">millions</span></label>
+                        <span class="label-subtext">Free Cash Flow</span>
+                        <input type="number" id="fcf" step="0.1" placeholder="e.g., 1402.9" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <input type="text" id="fcfCurrency" readonly style="background: #f1f5f9; cursor: not-allowed;" value="-">
+                        <span class="label-subtext">From Company settings</span>
+                    </div>
+                    <div class="gate-status pending" id="gate2Status" data-tooltip="Gate 2: FCF must be positive">?</div>
+                </div>
+
+                <div class="gate-row">
+                    <div class="form-group">
+                        <label>ND / EBITDA</label>
+                        <span class="label-subtext">Net Debt / EBITDA</span>
+                        <input type="number" id="leverage" step="0.1" placeholder="e.g., 2.4" oninput="calculateGates()">
+                    </div>
+                    <div class="form-group">
+                        <label>Threshold <span class="hint">sector-based</span></label>
+                        <span class="label-subtext">Automatically set by sector</span>
+                        <input type="number" id="leverageThreshold" value="3.0" step="0.1" readonly style="background: #f1f5f9; cursor: not-allowed;">
+                    </div>
+                    <div class="gate-status pending" id="gate3Status" data-tooltip="Gate 3: ND/EBITDA cap by sector: Tech 2.0x | Extractives/Manufacturing/Consumer 2.5x | Construction/Food 3.0x | Transport 3.5x">?</div>
+                </div>
+
+                <div class="ces-result-wrapper">
+                    <div class="ces-display" id="cesDisplay">
+                        <div class="ces-label">Capital Discipline Gate</div>
+                        <div class="ces-value" id="cesValue">CDG = ?</div>
+                    </div>
+                    <div class="gate-status pending ces-gate-help" data-tooltip="CDG = PASS: All gates passed. TR²S/TR³S metrics activate for LTI. | CDG = FAIL: One or more gates failed. Extended metrics blocked.">?</div>
+                </div>
+                <p class="ces-explanation">The Capital Discipline Gate determines whether extended return metrics (TR²S, TR³S) can inform CEO long-term incentive compensation. Only companies demonstrating capital discipline (CDG = PASS) qualify for extended LTI structures.</p>
+            </div>
+
+            <!-- Card 4: Asset Viability Factor - Full Width -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <span class="step">4</span>
+                    <h2>Asset Viability Factor</h2>
+                    <div class="gate-status pending card-help" data-tooltip="Measures how well the company preserves its asset base by reducing primary resource dependency. Feeds into the Regenerative Multiplier (RM) for TR²S calculation.">?</div>
+                </div>
+                
+                <div class="avf-grid">
+                    <div class="avf-sliders">
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Primary Material Dependency <span class="hint">→ RAR (0.00 - 1.00)</span> <span class="weight-display" id="alphaDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="rar" min="0" max="1" step="0.01" value="0.00" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="rarValue">0.00</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← High primary inputs</span>
+                                <span>High secondary inputs →</span>
+                            </div>
+                            <p class="slider-explanation">What share of inputs comes from secondary vs. primary raw materials? High secondary (>50%) = 0.8-1.0</p>
+                        </div>
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Asset Utilization Intensity <span class="hint">→ LVE (0.00 - 1.00)</span> <span class="weight-display" id="betaDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="lve" min="0" max="1" step="0.01" value="0.00" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="lveValue">0.00</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← Growth needs new assets</span>
+                                <span>Value from existing →</span>
+                            </div>
+                            <p class="slider-explanation">Does growth require new assets or does the company extract more value from existing assets? Improving = 0.7-1.0</p>
+                        </div>
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Circular Revenue Share <span class="hint">→ CRR (0.00 - 1.00)</span> <span class="weight-display" id="gammaDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="crr" min="0" max="1" step="0.01" value="0.00" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="crrValue">0.00</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← Product sales only</span>
+                                <span>Service/circular revenue →</span>
+                            </div>
+                            <p class="slider-explanation">What share of revenue comes from repair, reuse, recycling, refurbishment, services? High (>40%) = 0.8-1.0</p>
+                        </div>
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Resource Cost Exposure <span class="hint">→ θ adjustment</span> <span class="weight-display" id="thetaAdjDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="resourceExposure" min="-0.10" max="0.10" step="0.01" value="0.00" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="resourceExposureValue">0.00</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← High exposure (lower θ)</span>
+                                <span>Low exposure (higher θ) →</span>
+                            </div>
+                            <p class="slider-explanation">How strongly do commodity prices affect margins? Stable margins = positive adjustment to sector θ baseline.</p>
+                        </div>
+                        <div class="coefficients-display">
+                            <div class="rm-header">
+                                <p>Calculated RM (Regenerative Multiplier): <span class="weight-display" id="thetaDisplay"></span></p>
+                                <div class="gate-status pending slider-help" data-tooltip="Multiplier that rewards asset preservation. Higher RM means TR²S exceeds TRS. θ provides downside protection when TRS is negative.">?</div>
+                            </div>
+                            <div class="coefficients-grid">
+                                <div class="coef-item"><span class="coef-label">RM:</span> <span class="coef-value" id="rmDisplay">-</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="avf-explanation">
+                        <p class="formula-explanation">RM = α·RAR + β·LVE + γ·CRR</p>
+                        <p class="avf-intro">When TRS ≥ 0: TR²S = TRS × (1 + RM)<br>When TRS < 0: TR²S = TRS × (1 - θ·RM)</p>
+                        <table class="weights-table">
+                            <thead>
+                                <tr><th>Sector</th><th>θ base</th><th class="separator"></th><th>α (RAR)</th><th>β (LVE)</th><th>γ (CRR)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Extractives</td><td>0.40</td><td class="separator"></td><td>0.45</td><td>0.35</td><td>0.20</td></tr>
+                                <tr><td>Manufacturing</td><td>0.30</td><td class="separator"></td><td>0.40</td><td>0.40</td><td>0.20</td></tr>
+                                <tr><td>Construction</td><td>0.35</td><td class="separator"></td><td>0.35</td><td>0.45</td><td>0.20</td></tr>
+                                <tr><td>Consumer Goods</td><td>0.25</td><td class="separator"></td><td>0.30</td><td>0.30</td><td>0.40</td></tr>
+                                <tr><td>Food Systems</td><td>0.32</td><td class="separator"></td><td>0.35</td><td>0.35</td><td>0.30</td></tr>
+                                <tr><td>Transport</td><td>0.28</td><td class="separator"></td><td>0.40</td><td>0.40</td><td>0.20</td></tr>
+                                <tr><td>Technology</td><td>0.20</td><td class="separator"></td><td>0.35</td><td>0.30</td><td>0.35</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="weights-note" style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.5rem;">θ base adjusted by Resource Cost Exposure assessment (-0.10 to +0.10)</p>
+                    </div>
+                </div>
+                <p class="avf-board-note">The Asset Viability Factor enables boards to reward CEOs for preserving the asset base. The four assessment questions (Primary Material Dependency, Asset Utilization, Circular Revenue, Resource Cost Exposure) translate into formula inputs (RAR, LVE, CRR, θ). Higher scores increase the Regenerative Multiplier (RM), lifting TR²S above TRS. In downturns, θ dampens losses for companies with strong asset preservation. CDG = FAIL blocks all extended bonuses if ROIC falls below WACC.</p>
+                <div class="tr2s-result-wrapper">
+                    <div class="tr2s-result">
+                        <div class="tr2s-label">Extended Return (First Lens)</div>
+                        <div class="tr2s-value" id="tr2sDisplay">TR²S = -</div>
+                    </div>
+                    <div class="gate-status pending slider-help" data-tooltip="TR²S extends TRS by rewarding asset preservation. When TRS ≥ 0: TR²S = TRS × (1 + RM). When TRS < 0: TR²S = TRS × (1 - θ·RM).">?</div>
+                </div>
+            </div>
+
+            <!-- Card 5: System Conditions Factor -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <span class="step">5</span>
+                    <h2>System Conditions Factor</h2>
+                    <div class="gate-status pending card-help" data-tooltip="Does your business model deplete or regenerate natural resources? Extractive models reduce TR³S; regenerative models amplify it.">?</div>
+                </div>
+                <div class="scf-grid">
+                    <div class="scf-inputs">
+                        <div class="form-group">
+                            <label>Business Model Exposure <span class="hint">PA (-1.0 to +1.0)</span></label>
+                            <select id="pa" onchange="calculate()">
+                                <option value="-1.0">-1.0 Profits from depletion</option>
+                                <option value="-0.5">-0.5 Partially extractive</option>
+                                <option value="0" selected>0.0 Neutral</option>
+                                <option value="0.3">+0.3 Leaning preserving</option>
+                                <option value="0.5">+0.5 Aligned with preservation</option>
+                                <option value="0.7">+0.7 Strongly preserving</option>
+                                <option value="1.0">+1.0 Fully regenerative</option>
+                            </select>
+                            <p class="slider-explanation">Does your business model profit from resource depletion or regeneration?</p>
+                        </div>
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Supply Chain Resilience <span class="hint">VCI (0.00 - 1.00)</span> <span class="weight-display" id="lambdaDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="vci" min="0" max="1" step="0.01" value="0.50" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="vciValue">0.50</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← Fragile</span>
+                                <span>Resilient →</span>
+                            </div>
+                            <p class="slider-explanation">How resilient is your supply chain against resource shocks?</p>
+                        </div>
+                        <div class="form-group slider-with-help">
+                            <div class="label-row">
+                                <label>Ecosystem Contribution <span class="hint">ECR (0.00 - 1.00)</span> <span class="weight-display" id="muDisplay"></span></label>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="ecr" min="0" max="1" step="0.01" value="0.50" oninput="updateSlider(this); calculate()">
+                                <span class="slider-value" id="ecrValue">0.50</span>
+                            </div>
+                            <div class="slider-scale">
+                                <span>← Extractive</span>
+                                <span>Regenerative →</span>
+                            </div>
+                            <p class="slider-explanation">How much do you invest in restoring the ecosystems you depend on?</p>
+                        </div>
+                        <div class="ri-re-results">
+                            <div class="ri-result-box">
+                                <div class="ri-label">Resilience Index</div>
+                                <div class="ri-value" id="riDisplay">RI = -</div>
+                                <p class="result-explanation">Weighted sum of supply chain and ecosystem factors</p>
+                            </div>
+                            <div class="re-result-box">
+                                <div class="re-label">Regenerative Exposure</div>
+                                <div class="re-value" id="reDisplay">RE = -</div>
+                                <p class="result-explanation">Business model direction amplifies or dampens RI</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scf-explanation">
+                        <div class="formula-explanation">
+                            <p class="formula-line"><strong>RI = λ·VCI + μ·ECR</strong></p>
+                            <p class="formula-desc">Resilience Index: weighted sum of supply chain and ecosystem factors</p>
+                            <p class="formula-line"><strong>RE = PA × RI</strong></p>
+                            <p class="formula-desc">Regenerative Exposure: business model direction amplifies or dampens RI</p>
+                            <p class="formula-line"><strong>TR³S = TR²S × (1 + RE)</strong></p>
+                            <p class="formula-desc">Second lens: system-level impact on extended return</p>
+                        </div>
+                        <table class="weights-table" id="scfWeightsTable">
+                            <thead>
+                                <tr><th>Sector</th><th>λ (VCI)</th><th>μ (ECR)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Extractives</td><td>0.40</td><td>0.60</td></tr>
+                                <tr><td>Manufacturing</td><td>0.50</td><td>0.50</td></tr>
+                                <tr><td>Construction</td><td>0.45</td><td>0.55</td></tr>
+                                <tr><td>Consumer Goods</td><td>0.60</td><td>0.40</td></tr>
+                                <tr><td>Food Systems</td><td>0.50</td><td>0.50</td></tr>
+                                <tr><td>Transport</td><td>0.55</td><td>0.45</td></tr>
+                                <tr><td>Technology</td><td>0.60</td><td>0.40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p class="avf-board-note">The System Conditions Factor enables boards to reward CEOs for building external resilience. PA determines whether the business model amplifies or dampens system risk. Higher VCI and ECR inputs increase the Resilience Index (RI), which feeds into the Regenerative Exposure (RE). Positive RE lifts TR³S above TR²S; negative PA can reduce it. This aligns CEO incentives with long-term system stability, not just internal asset management.</p>
+                <div class="tr3s-result-wrapper">
+                    <div class="tr3s-result">
+                        <div class="tr3s-label">Extended Return (Second Lens)</div>
+                        <div class="tr3s-value" id="tr3sDisplay">TR³S = -</div>
+                    </div>
+                    <div class="gate-status pending slider-help" data-tooltip="TR³S extends TR²S by factoring in system-level resilience. TR³S = TR²S × (1 + RE), where RE = PA × RI.">?</div>
+                </div>
+            </div>
+
+            <!-- Card 6: Extended Return Risk Assessment Matrix -->
+            <div class="card full-width strategic-map-card">
+                <div class="card-header">
+                    <span class="step">6</span>
+                    <h2>Extended Return Risk Assessment Matrix</h2>
+                    <div class="gate-status pending card-help" data-tooltip="Summary of all inputs for positioning analysis. Shows where the company stands on capital stewardship, asset viability, and structural vulnerability.">?</div>
+                </div>
+                
+                <p class="map-intro">Input summary for year <span id="outputYear">2024</span>. Capital Stewardship × Asset Viability × Structural Vulnerability.</p>
+
+                <div class="map-grid">
+                    <div>
+                        <div class="map-section-title">Capital Discipline Gate</div>
+                        <div class="map-row">
+                            <span class="map-label">Status</span>
+                            <span class="map-value" id="mapGateStatus">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">ROIC Spread</span>
+                            <span class="map-value" id="mapRoicSpread">-</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="map-section-title">Asset Viability Factor</div>
+                        <div class="map-row">
+                            <span class="map-label">Primary Material Dep.</span>
+                            <span class="map-value" id="mapRAR">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">Asset Utilization</span>
+                            <span class="map-value" id="mapLVE">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">Circular Revenue</span>
+                            <span class="map-value" id="mapCRR">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">Resource Exposure</span>
+                            <span class="map-value" id="mapResourceExposure">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-section-title">System Conditions Factor</div>
+                <div class="map-grid">
+                    <div>
+                        <div class="map-row">
+                            <span class="map-label">Business Model Exposure</span>
+                            <span class="map-value" id="mapPA">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">Supply Chain Resilience</span>
+                            <span class="map-value" id="mapVCI">-</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="map-row">
+                            <span class="map-label">Ecosystem Contribution</span>
+                            <span class="map-value" id="mapECR">-</span>
+                        </div>
+                        <div class="map-row">
+                            <span class="map-label">Factor Score</span>
+                            <span class="map-value" id="mapFactorScore">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="position-box">
+                    <div class="map-section-title">Position</div>
+                    <div class="position-grid">
+                        <div class="position-item">
+                            <div class="pos-label">Capital Stewardship</div>
+                            <div class="pos-value" id="posCapital">-</div>
+                        </div>
+                        <div class="position-item">
+                            <div class="pos-label">Asset Viability</div>
+                            <div class="pos-value" id="posAsset">-</div>
+                        </div>
+                        <div class="position-item">
+                            <div class="pos-label">Structural Vulnerability</div>
+                            <div class="pos-value" id="posVulnerability">-</div>
+                        </div>
+                        <div class="position-item">
+                            <div class="pos-label">Quadrant</div>
+                            <div class="pos-value quadrant" id="posQuadrant">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interpretation" id="interpretation">
+                    Enter data above to generate positioning analysis.
+                </div>
+            </div>
+
+            <!-- Card 7: CEO Compensation -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <span class="step">7</span>
+                    <h2>CEO Compensation Structure</h2>
+                    <div class="gate-status pending card-help" data-tooltip="Define the compensation structure and vesting thresholds. The board selects which metric (TRS, TR²S, or TR³S) determines LTI payout.">?</div>
+                </div>
+                
+                <p class="comp-intro">Based on European Large-Cap Median Structure. Adjust values to match the actual remuneration report.</p>
+                
+                <!-- Visual Compensation Boxes -->
+                <div class="comp-boxes">
+                    <div class="comp-box">
+                        <div class="comp-box-label">Base Salary</div>
+                        <div class="comp-box-input">
+                            <input type="number" id="baseSalary" step="0.01" value="1.50" oninput="calculate()">
+                            <span class="comp-box-unit">M</span>
+                        </div>
+                        <div class="comp-box-hint">Fixed annual salary</div>
+                    </div>
+                    <div class="comp-box">
+                        <div class="comp-box-label">STI Target</div>
+                        <div class="comp-box-input">
+                            <input type="number" id="stiTarget" step="0.01" value="1.50" oninput="calculate()">
+                            <span class="comp-box-unit">M</span>
+                        </div>
+                        <div class="comp-box-hint">Short-term incentive (fixed)</div>
+                    </div>
+                    <div class="comp-box">
+                        <div class="comp-box-label">LTI Target</div>
+                        <div class="comp-box-input">
+                            <input type="number" id="ltiTarget" step="0.01" value="1.50" oninput="calculate()">
+                            <span class="comp-box-unit">M</span>
+                        </div>
+                        <div class="comp-box-hint">Tied to selected metric</div>
+                    </div>
+                    <div class="comp-box">
+                        <div class="comp-box-label">LTI Cap</div>
+                        <div class="comp-box-input">
+                            <input type="number" id="ltiCap" step="1" value="200" oninput="calculate()">
+                            <span class="comp-box-unit">%</span>
+                        </div>
+                        <div class="comp-box-hint">Maximum payout</div>
+                    </div>
+                    <div class="comp-box">
+                        <div class="comp-box-label">Currency</div>
+                        <div class="comp-box-input">
+                            <select id="compCurrency" onchange="calculate()">
+                                <option value="EUR" selected>EUR</option>
+                                <option value="CHF">CHF</option>
+                                <option value="USD">USD</option>
+                                <option value="GBP">GBP</option>
+                            </select>
+                        </div>
+                        <div class="comp-box-hint">Reporting currency</div>
+                    </div>
+                </div>
+
+                <!-- Vesting Ladder -->
+                <div class="vesting-section">
+                    <h3>Vesting Ladder <span class="hint">(3-year cumulative returns)</span></h3>
+                    <p class="vesting-intro">Define the performance thresholds for each metric. Vesting interpolates linearly between levels.</p>
+                    <table class="vesting-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Threshold <span class="hint">(50%)</span></th>
+                                <th>Target <span class="hint">(100%)</span></th>
+                                <th>Stretch <span class="hint">(150%)</span></th>
+                                <th>Cap <span class="hint">(200%)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="metric-name">TRS</td>
+                                <td><input type="number" id="trsThreshold" value="0" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="trsTarget" value="30" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="trsStretch" value="40" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="trsCap" value="50" step="1" oninput="updateVestingLadder()">%</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">TR²S</td>
+                                <td><input type="number" id="tr2sThreshold" value="0" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr2sTarget" value="25" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr2sStretch" value="35" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr2sCap" value="45" step="1" oninput="updateVestingLadder()">%</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">TR³S</td>
+                                <td><input type="number" id="tr3sThreshold" value="0" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr3sTarget" value="20" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr3sStretch" value="30" step="1" oninput="updateVestingLadder()">%</td>
+                                <td><input type="number" id="tr3sCap" value="40" step="1" oninput="updateVestingLadder()">%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Board Metric Selection -->
+                <div class="metric-selection">
+                    <h3>Board Metric Selection</h3>
+                    <p class="selection-intro">Which metric should determine the CEO's LTI payout?</p>
+                    <div class="metric-options">
+                        <label class="metric-option">
+                            <input type="radio" name="boardMetric" value="trs" onchange="updateSelectedMetric(); calculate()">
+                            <span class="metric-label">TRS</span>
+                            <span class="metric-desc">Traditional shareholder return</span>
+                        </label>
+                        <label class="metric-option">
+                            <input type="radio" name="boardMetric" value="tr2s" onchange="updateSelectedMetric(); calculate()">
+                            <span class="metric-label">TR²S</span>
+                            <span class="metric-desc">Rewards asset preservation</span>
+                        </label>
+                        <label class="metric-option">
+                            <input type="radio" name="boardMetric" value="tr3s" checked onchange="updateSelectedMetric(); calculate()">
+                            <span class="metric-label">TR³S</span>
+                            <span class="metric-desc">Rewards system-level regeneration</span>
+                        </label>
+                    </div>
+                </div>
+
+                <p class="avf-board-note">TR²S and TR³S have lower thresholds than TRS because they already incorporate asset preservation and system resilience, making them harder to achieve. Boards selecting TR³S signal commitment to long-term value creation beyond quarterly returns. The selected metric determines which row of the vesting ladder applies to the CEO's LTI calculation.</p>
+
+                <!-- Compensation Result Table -->
+                <div class="scenarios-section">
+                    <h3>Compensation Result</h3>
+                    <p class="scenarios-intro">Comparison of CEO compensation under each metric. The selected metric row is highlighted.</p>
+                    <table class="scenarios-table" id="scenariosTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Return</th>
+                                <th>Vesting %</th>
+                                <th>LTI Payout</th>
+                                <th>Total Comp</th>
+                                <th>vs TRS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="rowTrs" class="scenario-row">
+                                <td class="metric-name">TRS</td>
+                                <td id="scenarioTrsReturn">-</td>
+                                <td id="scenarioTrsVesting">-</td>
+                                <td id="scenarioTrsLti">-</td>
+                                <td id="scenarioTrsTotal">-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr id="rowTr2s" class="scenario-row">
+                                <td class="metric-name">TR²S</td>
+                                <td id="scenarioTr2sReturn">-</td>
+                                <td id="scenarioTr2sVesting">-</td>
+                                <td id="scenarioTr2sLti">-</td>
+                                <td id="scenarioTr2sTotal">-</td>
+                                <td id="scenarioTr2sVsTrs" class="vs-trs">-</td>
+                            </tr>
+                            <tr id="rowTr3s" class="scenario-row selected">
+                                <td class="metric-name">TR³S</td>
+                                <td id="scenarioTr3sReturn">-</td>
+                                <td id="scenarioTr3sVesting">-</td>
+                                <td id="scenarioTr3sLti">-</td>
+                                <td id="scenarioTr3sTotal">-</td>
+                                <td id="scenarioTr3sVsTrs" class="vs-trs">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Print Buttons -->
+        <div class="print-row">
+            <button class="btn btn-primary" onclick="printInputData()">Print Input Data</button>
+            <button class="btn btn-primary" onclick="printResults()">Print Results</button>
+        </div>
+
+    </main>
+
+    <!-- Print Footer (only visible when printing) -->
+    <div class="print-footer">
+        © 2025-2026 Catherine Schoendorff | Extended Shareholder Return | PhD Research<br>
+        Generated by Rethink Value™ Calculator | catherineschoendorff.github.io
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-legal">
+            <a href="impressum.html">Legal Notice</a>
+            <span>&#183;</span>
+            <a href="datenschutz.html">Privacy Policy</a>
+        </div>
+        <div class="footer-logo">
+            <img src="images/Rethink%20Value%20Logo%20Final.png" alt="Rethink Value Logo" class="logo-icon">
+        </div>
+        <p class="footer-author">Catherine Schoendorff, Business Strategist, Circular Economist</p>
+        <p class="footer-meta">&#169; 2025&#8211;2026 Catherine Schoendorff &#183; Extended Shareholder Return &#183; PhD Research</p>
+    </footer>
+
+    <!-- Prompt Modal -->
+    <div class="modal-overlay" id="promptModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Perplexity Deep Research Prompt</h2>
+                <button class="modal-close" onclick="closePromptModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--color-text-light); font-size: 0.9rem;">
+                    Replace <strong>[COMPANY NAME]</strong>, <strong>[TICKER]</strong>, and <strong>[YEAR]</strong> with your target.
+                </p>
+                <pre id="promptText">Analyze [COMPANY NAME] ([TICKER]) for fiscal year [YEAR] to provide inputs for the Extended Shareholder Return Calculator.
+
+═══════════════════════════════════════════════════════════════
+SECTION A: STOCK PERFORMANCE (TRS Calculation)
+═══════════════════════════════════════════════════════════════
+
+Provide exact values:
+- P₀: Opening share price on first trading day of [YEAR]
+- P₁: Closing share price on last trading day of [YEAR]
+- D: Total dividends paid per share during [YEAR]
+- Currency: [EUR/CHF/USD/GBP/DKK]
+- Calculate: TRS = (P₁ - P₀ + D) / P₀
+
+═══════════════════════════════════════════════════════════════
+SECTION B: CAPITAL DISCIPLINE GATE
+═══════════════════════════════════════════════════════════════
+
+B1. Gate 1: ROIC vs WACC
+- ROIC (Return on Invested Capital) in %
+- WACC (Weighted Average Cost of Capital) in %
+- Spread in percentage points (ROIC minus WACC)
+- Gate Status: PASS if ROIC ≥ WACC
+
+B2. Gate 2: Free Cash Flow
+- Free Cash Flow in millions (specify currency)
+- Gate Status: PASS if FCF > 0
+
+B3. Gate 3: Balance Sheet
+- Net Debt / EBITDA ratio
+- Gate Status: PASS if ratio < 3.0x
+
+B4. Capital Discipline Gate (CDG)
+- CDG Status: PASS if all gates pass, FAIL if any gate fails
+
+═══════════════════════════════════════════════════════════════
+SECTION C: ASSET VIABILITY FACTOR (for TR²S)
+═══════════════════════════════════════════════════════════════
+
+Provide data to estimate each factor on a 0.00 to 1.00 scale:
+
+C1. Primary Material Dependency (→ RAR)
+- What share of inputs comes from secondary vs. primary raw materials?
+- Examples: recycled content %, post-consumer materials, renewable inputs
+- High secondary (>50%) = 0.8-1.0, Medium (20-50%) = 0.4-0.7, Low (<20%) = 0.0-0.3
+- Provide evidence and estimate RAR (0.00 to 1.00)
+
+C2. Asset Utilization Intensity (→ LVE)
+- Does growth require new assets, or does the company extract more value from existing assets?
+- Examples: declining capex intensity, revenue per installed base, asset turnover trends
+- Improving utilization = 0.7-1.0, Stable = 0.4-0.6, Worsening = 0.0-0.3
+- Provide evidence and estimate LVE (0.00 to 1.00)
+
+C3. Circular Revenue Share (→ CRR)
+- What share of revenue comes from repair, reuse, recycling, refurbishment, services?
+- Examples: service contracts, aftermarket, take-back, rental, subscription
+- High (>40%) = 0.8-1.0, Medium (10-40%) = 0.3-0.7, Low (<10%) = 0.0-0.2
+- Provide evidence and estimate CRR (0.00 to 1.00)
+
+C4. Resource Cost Exposure (→ θ adjustment)
+- How strongly do raw material prices affect margins?
+- Examples: COGS sensitivity to commodity indices, margin volatility, hedging needs
+- Low exposure (stable margins) = +0.05 to +0.10, High exposure = -0.05 to -0.10
+- Provide evidence and estimate adjustment (-0.10 to +0.10)
+
+═══════════════════════════════════════════════════════════════
+SECTION D: SYSTEM CONDITIONS FACTOR (for TR³S)
+═══════════════════════════════════════════════════════════════
+
+D1. Business Model Exposure (PA - Purpose Alignment)
+- Does the core business model profit from extraction or preservation?
+- Scale: -1.0 (profits from depletion) to +1.0 (profits from regeneration)
+- Provide reasoning and estimate PA
+
+D2. Supply Chain Resilience (VCI - Value Chain Impact)
+- How dependent is the company on extractive/volatile inputs?
+- Scale: 0.00 (fully extractive-dependent) to 1.00 (fully circular/resilient)
+- Provide evidence and estimate VCI
+
+D3. External Risk Mitigation (ECR - Ecosystem Condition Risk)
+- What is the company's exposure to regulatory, physical, and transition risks?
+- Scale: 0.00 (high exposure, no mitigation) to 1.00 (low exposure or strong mitigation)
+- Provide evidence and estimate ECR
+
+═══════════════════════════════════════════════════════════════
+SECTION E: CEO COMPENSATION STRUCTURE
+═══════════════════════════════════════════════════════════════
+
+From the most recent remuneration report, provide:
+- Base Salary (annual, in EUR or local currency)
+- STI Target (Short-Term Incentive target, typically % of base or fixed amount)
+- LTI Target (Long-Term Incentive target at 100% achievement)
+- LTI Cap (maximum payout, typically 150-200% of target)
+- Performance metrics currently used for LTI (e.g., TSR, EPS, ROIC)
+
+═══════════════════════════════════════════════════════════════
+SECTION F: SECTOR CLASSIFICATION
+═══════════════════════════════════════════════════════════════
+
+Classify into ONE sector for weighting coefficients:
+- Extractives & Primary Materials
+- Manufacturing
+- Construction & Built Environment
+- Consumer Goods & Fashion
+- Food Systems
+- Transport & Logistics
+- Technology & Digital Platforms
+
+═══════════════════════════════════════════════════════════════
+OUTPUT FORMAT
+═══════════════════════════════════════════════════════════════
+
+Provide a summary table with all numeric inputs:
+
+STOCK DATA
+| Metric | Value |
+| P₀ | [value] [currency] |
+| P₁ | [value] [currency] |
+| D | [value] [currency] |
+| TRS | [value]% |
+
+CAPITAL DISCIPLINE GATE
+| Gate | Metric | Value | Status |
+| Gate 1 | ROIC | [x]% | PASS/FAIL |
+| Gate 1 | WACC | [x]% | - |
+| Gate 1 | Spread | [x]pp | - |
+| Gate 2 | FCF | [x]M | PASS/FAIL |
+| Gate 3 | ND/EBITDA | [x]x | PASS/FAIL |
+| CDG | - | PASS or FAIL | - |
+
+ASSET VIABILITY FACTOR
+| Component | Evidence | Estimate |
+| Primary Material Dependency (→ RAR) | [brief evidence] | [0.00-1.00] |
+| Asset Utilization Intensity (→ LVE) | [brief evidence] | [0.00-1.00] |
+| Circular Revenue Share (→ CRR) | [brief evidence] | [0.00-1.00] |
+| Resource Cost Exposure (→ θ adj.) | [brief evidence] | [-0.10 to +0.10] |
+
+SYSTEM CONDITIONS FACTOR
+| Component | Evidence | Estimate |
+| Business Model Exposure (PA) | [brief evidence] | [-1.0 to +1.0] |
+| Supply Chain Resilience (VCI) | [brief evidence] | [0.00-1.00] |
+| External Risk Mitigation (ECR) | [brief evidence] | [0.00-1.00] |
+
+CEO COMPENSATION
+| Component | Value |
+| Base Salary | [value] |
+| STI Target | [value] |
+| LTI Target | [value] |
+| LTI Cap | [value] |
+
+SECTOR: [classification]
+
+Please cite all sources (Annual Reports, Sustainability Reports, Remuneration Reports, financial databases).</pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePromptModal()">Close</button>
+                <button class="btn btn-primary" onclick="copyPromptFromModal()">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Data Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Import Perplexity Data</h2>
+                <button class="modal-close" onclick="closeImportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--color-text-light); font-size: 0.9rem;">
+                    Paste the complete Perplexity output below. The calculator will extract and populate the values automatically.
+                </p>
+                <textarea id="importText" placeholder="Paste Perplexity output here..." style="width: 100%; height: 300px; font-family: var(--font-body); font-size: 0.85rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 8px; resize: vertical;"></textarea>
+                <div id="importFeedback" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeImportModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="parseAndImport()">Import Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sector presets with all coefficients
+        const sectorPresets = {
+            extractives: { alpha: 0.45, beta: 0.35, gamma: 0.20, theta: 0.40, lambda: 0.40, mu: 0.60, leverageCap: 2.5 },
+            manufacturing: { alpha: 0.40, beta: 0.40, gamma: 0.20, theta: 0.30, lambda: 0.50, mu: 0.50, leverageCap: 2.5 },
+            construction: { alpha: 0.35, beta: 0.45, gamma: 0.20, theta: 0.35, lambda: 0.45, mu: 0.55, leverageCap: 3.0 },
+            consumer: { alpha: 0.30, beta: 0.30, gamma: 0.40, theta: 0.25, lambda: 0.60, mu: 0.40, leverageCap: 2.5 },
+            food: { alpha: 0.35, beta: 0.35, gamma: 0.30, theta: 0.32, lambda: 0.50, mu: 0.50, leverageCap: 3.0 },
+            transport: { alpha: 0.40, beta: 0.40, gamma: 0.20, theta: 0.28, lambda: 0.55, mu: 0.45, leverageCap: 3.5 },
+            technology: { alpha: 0.35, beta: 0.30, gamma: 0.35, theta: 0.20, lambda: 0.60, mu: 0.40, leverageCap: 2.0 }
+        };
+
+        // Vesting ladder thresholds (cumulative 3-year returns)
+        // Get vesting ladder from inputs
+        function getVestingLadder() {
+            return {
+                trs: {
+                    threshold: parseFloat(document.getElementById('trsThreshold').value) / 100 || 0,
+                    target: parseFloat(document.getElementById('trsTarget').value) / 100 || 0.30,
+                    stretch: parseFloat(document.getElementById('trsStretch').value) / 100 || 0.40,
+                    cap: parseFloat(document.getElementById('trsCap').value) / 100 || 0.50
+                },
+                tr2s: {
+                    threshold: parseFloat(document.getElementById('tr2sThreshold').value) / 100 || 0,
+                    target: parseFloat(document.getElementById('tr2sTarget').value) / 100 || 0.25,
+                    stretch: parseFloat(document.getElementById('tr2sStretch').value) / 100 || 0.35,
+                    cap: parseFloat(document.getElementById('tr2sCap').value) / 100 || 0.45
+                },
+                tr3s: {
+                    threshold: parseFloat(document.getElementById('tr3sThreshold').value) / 100 || 0,
+                    target: parseFloat(document.getElementById('tr3sTarget').value) / 100 || 0.20,
+                    stretch: parseFloat(document.getElementById('tr3sStretch').value) / 100 || 0.30,
+                    cap: parseFloat(document.getElementById('tr3sCap').value) / 100 || 0.40
+                }
+            };
+        }
+
+        // Update vesting ladder and recalculate
+        function updateVestingLadder() {
+            calculate();
+        }
+
+        const vestingLadder = {
+            trs: { threshold: 0, target: 0.30, stretch: 0.40, cap: 0.50 },
+            tr2s: { threshold: 0, target: 0.25, stretch: 0.35, cap: 0.45 },
+            tr3s: { threshold: 0, target: 0.20, stretch: 0.30, cap: 0.40 }
+        };
+
+        // Current coefficients
+        let currentCoefs = null;
+        let cesStatus = null;
+        let currentMode = 'public';
+
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Mode toggle
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modePublic').classList.toggle('active', mode === 'public');
+            document.getElementById('modePrivate').classList.toggle('active', mode === 'private');
+            document.getElementById('promptHelper').classList.toggle('hidden', mode !== 'public');
+            document.getElementById('stockDataCard').style.display = mode === 'public' ? 'block' : 'none';
+        }
+
+        // Prompt modal
+        function openPromptModal() {
+            document.getElementById('promptModal').classList.add('show');
+        }
+
+        function closePromptModal() {
+            document.getElementById('promptModal').classList.remove('show');
+        }
+
+        function copyPrompt() {
+            navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
+                const fb = document.getElementById('copyFeedback');
+                fb.classList.add('show');
+                setTimeout(() => fb.classList.remove('show'), 2000);
+            });
+        }
+
+        // Update selected metric row highlighting
+        function updateSelectedMetric() {
+            const selectedMetric = document.querySelector('input[name="boardMetric"]:checked').value;
+            
+            // Remove selected class from all rows
+            document.querySelectorAll('.scenario-row').forEach(row => {
+                row.classList.remove('selected');
+            });
+            
+            // Add selected class to the chosen metric row
+            if (selectedMetric === 'trs') {
+                document.getElementById('rowTrs').classList.add('selected');
+            } else if (selectedMetric === 'tr2s') {
+                document.getElementById('rowTr2s').classList.add('selected');
+            } else if (selectedMetric === 'tr3s') {
+                document.getElementById('rowTr3s').classList.add('selected');
+            }
+        }
+
+        function copyPromptFromModal() {
+            navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
+                const btn = event.target;
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+            });
+        }
+
+        // Import Modal Functions
+        function openImportModal() {
+            document.getElementById('importModal').classList.add('show');
+            document.getElementById('importText').value = '';
+            document.getElementById('importFeedback').style.display = 'none';
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.remove('show');
+        }
+
+        function parseAndImport() {
+            const text = document.getElementById('importText').value;
+            const feedback = document.getElementById('importFeedback');
+            const results = [];
+            const errors = [];
+
+            // Helper function to extract numeric values
+            function extractNumber(pattern, text, fieldName) {
+                const match = text.match(pattern);
+                if (match) {
+                    const value = parseFloat(match[1].replace(',', '.'));
+                    if (!isNaN(value)) {
+                        results.push(`${fieldName}: ${value}`);
+                        return value;
+                    }
+                }
+                return null;
+            }
+
+            // Helper to set slider value
+            function setSlider(id, value, min, max) {
+                const slider = document.getElementById(id);
+                if (slider && value !== null) {
+                    const clampedValue = Math.max(min, Math.min(max, value));
+                    slider.value = clampedValue;
+                    // Trigger input event to update display
+                    slider.dispatchEvent(new Event('input'));
+                }
+            }
+
+            // Helper to set input value
+            function setInput(id, value) {
+                const input = document.getElementById(id);
+                if (input && value !== null) {
+                    input.value = value;
+                }
+            }
+
+            // Parse Stock Data
+            const p0 = extractNumber(/P[₀0]\s*[:\|]\s*(\d+[\.,]?\d*)/i, text, 'P0');
+            const p1 = extractNumber(/P[₁1]\s*[:\|]\s*(\d+[\.,]?\d*)/i, text, 'P1');
+            const d = extractNumber(/\bD\s*[:\|]\s*(\d+[\.,]?\d*)/i, text, 'Dividends');
+
+            if (p0) setInput('p0', p0);
+            if (p1) setInput('p1', p1);
+            if (d) setInput('dividends', d);
+
+            // Parse Capital Discipline Gate
+            const roic = extractNumber(/ROIC\s*[:\|]\s*(\d+[\.,]?\d*)\s*%?/i, text, 'ROIC');
+            const wacc = extractNumber(/WACC\s*[:\|]\s*(\d+[\.,]?\d*)\s*%?/i, text, 'WACC');
+            const fcf = extractNumber(/FCF\s*[:\|]\s*[€$£]?\s*(-?\d+[\.,]?\d*)/i, text, 'FCF');
+            const ndEbitda = extractNumber(/(?:Net\s*Debt\s*\/\s*EBITDA|ND\/EBITDA|Leverage)\s*[:\|]\s*(\d+[\.,]?\d*)/i, text, 'ND/EBITDA');
+
+            if (roic) setInput('roic', roic);
+            if (wacc) setInput('wacc', wacc);
+            if (fcf) setInput('fcf', fcf);
+            if (ndEbitda) setInput('leverage', ndEbitda);
+
+            // Parse Asset Viability (RAR, LVE, CRR)
+            const rar = extractNumber(/(?:RAR|Asset\s*Mix\s*Shift)\s*[:\|]?\s*.*?(\d+[\.,]\d+)/i, text, 'RAR');
+            const lve = extractNumber(/(?:LVE|Lifetime|Life\s*Extension)\s*[:\|]?\s*.*?(\d+[\.,]\d+)/i, text, 'LVE');
+            const crr = extractNumber(/(?:CRR|Circular\s*Revenue)\s*[:\|]?\s*.*?(\d+[\.,]\d+)/i, text, 'CRR');
+
+            if (rar) setSlider('rar', rar, 0, 1);
+            if (lve) setSlider('lve', lve, 0, 1);
+            if (crr) setSlider('crr', crr, 0, 1);
+
+            // Parse System Conditions (PA, VCI, ECR)
+            const pa = extractNumber(/(?:PA|Purpose\s*Alignment)\s*[:\|]?\s*.*?(-?\d+[\.,]\d+)/i, text, 'PA');
+            const vci = extractNumber(/(?:VCI|Value\s*Chain|Supply\s*Chain)\s*[:\|]?\s*.*?(\d+[\.,]\d+)/i, text, 'VCI');
+            const ecr = extractNumber(/(?:ECR|External\s*Risk|Ecosystem)\s*[:\|]?\s*.*?(\d+[\.,]\d+)/i, text, 'ECR');
+
+            if (pa) setSlider('pa', pa, -1, 1);
+            if (vci) setSlider('vci', vci, 0, 1);
+            if (ecr) setSlider('ecr', ecr, 0, 1);
+
+            // Parse CEO Compensation
+            const baseSalary = extractNumber(/Base\s*Salary\s*[:\|]\s*[€$£]?\s*(\d+[\.,]?\d*)/i, text, 'Base Salary');
+            const stiTarget = extractNumber(/STI\s*(?:Target)?\s*[:\|]\s*[€$£]?\s*(\d+[\.,]?\d*)/i, text, 'STI Target');
+            const ltiTarget = extractNumber(/LTI\s*Target\s*[:\|]\s*[€$£]?\s*(\d+[\.,]?\d*)/i, text, 'LTI Target');
+            const ltiCap = extractNumber(/LTI\s*Cap\s*[:\|]\s*[€$£]?\s*(\d+[\.,]?\d*)/i, text, 'LTI Cap');
+
+            if (baseSalary) setInput('baseSalary', baseSalary);
+            if (stiTarget) setInput('stiTarget', stiTarget);
+            if (ltiTarget) setInput('ltiTarget', ltiTarget);
+            if (ltiCap) setInput('ltiCap', ltiCap);
+
+            // Parse Sector
+            const sectorMap = {
+                'extractives': 'extractives',
+                'primary materials': 'extractives',
+                'manufacturing': 'manufacturing',
+                'construction': 'construction',
+                'built environment': 'construction',
+                'consumer goods': 'consumer',
+                'fashion': 'consumer',
+                'food': 'food',
+                'food systems': 'food',
+                'transport': 'transport',
+                'logistics': 'transport',
+                'technology': 'technology',
+                'digital': 'technology'
+            };
+
+            for (const [keyword, sectorValue] of Object.entries(sectorMap)) {
+                if (text.toLowerCase().includes(keyword)) {
+                    document.getElementById('sector').value = sectorValue;
+                    applySectorPresets();
+                    results.push(`Sector: ${sectorValue}`);
+                    break;
+                }
+            }
+
+            // Parse Currency
+            const currencyMatch = text.match(/Currency\s*[:\|]\s*(EUR|CHF|USD|GBP|DKK|SEK|NOK)/i);
+            if (currencyMatch) {
+                const currency = currencyMatch[1].toUpperCase();
+                document.getElementById('currency').value = currency;
+                document.getElementById('fcfCurrency').value = currency;
+                document.getElementById('stockCurrency').value = currency;
+                results.push(`Currency: ${currency}`);
+            }
+
+            // Parse Company Name and Ticker
+            const companyMatch = text.match(/Company\s*(?:Name)?\s*[:\|]\s*([^\n\|]+)/i);
+            const tickerMatch = text.match(/Ticker\s*[:\|]\s*([A-Z0-9\.\-]+)/i);
+            const yearMatch = text.match(/Year\s*[:\|]\s*(20\d{2})/i);
+            
+            if (companyMatch) {
+                document.getElementById('companyName').value = companyMatch[1].trim();
+                results.push(`Company: ${companyMatch[1].trim()}`);
+            }
+            if (tickerMatch) {
+                document.getElementById('ticker').value = tickerMatch[1];
+                results.push(`Ticker: ${tickerMatch[1]}`);
+            }
+            if (yearMatch) {
+                document.getElementById('year').value = yearMatch[1];
+                results.push(`Year: ${yearMatch[1]}`);
+            }
+
+            // Show feedback
+            if (results.length > 0) {
+                feedback.innerHTML = `<strong style="color: #059669;">Successfully imported ${results.length} values:</strong><br><span style="font-size: 0.85rem; color: var(--color-text-light);">${results.join(', ')}</span>`;
+                feedback.style.display = 'block';
+                feedback.style.background = '#ecfdf5';
+                feedback.style.border = '1px solid #a7f3d0';
+                
+                // Lock all imported fields
+                const importedFields = [
+                    'companyName', 'ticker', 'year', 'currency', 'sector',
+                    'p0', 'p1', 'dividends',
+                    'roic', 'wacc', 'fcf', 'leverage',
+                    'rar', 'lve', 'crr', 'pa', 'vci', 'ecr',
+                    'baseSalary', 'stiTarget', 'ltiTarget', 'ltiCap'
+                ];
+                lockImportedFields(importedFields);
+                
+                // Trigger calculation
+                calculateGates();
+                calculate();
+                
+                // Close modal after short delay
+                setTimeout(() => {
+                    closeImportModal();
+                }, 2000);
+            } else {
+                feedback.innerHTML = '<strong style="color: #dc2626;">No values could be extracted.</strong><br><span style="font-size: 0.85rem;">Please ensure the Perplexity output follows the expected format with labeled values.</span>';
+                feedback.style.display = 'block';
+                feedback.style.background = '#fef2f2';
+                feedback.style.border = '1px solid #fecaca';
+            }
+        }
+
+        document.getElementById('promptModal').addEventListener('click', e => {
+            if (e.target.id === 'promptModal') closePromptModal();
+        });
+
+        document.getElementById('importModal').addEventListener('click', e => {
+            if (e.target.id === 'importModal') closeImportModal();
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closePromptModal();
+                closeImportModal();
+            }
+        });
+
+        // Currency sync - propagate from Card 1 to Card 2 and Card 3
+        document.getElementById('currency').addEventListener('change', function() {
+            const currency = this.value;
+            document.getElementById('fcfCurrency').value = currency;
+            document.getElementById('stockCurrency').value = currency;
+        });
+
+        // Lock fields after import
+        function lockImportedFields(importedFieldIds) {
+            importedFieldIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (el.tagName === 'SELECT') {
+                        el.disabled = true;
+                    } else if (el.type === 'range') {
+                        el.disabled = true;
+                        el.style.opacity = '0.6';
+                    } else {
+                        el.readOnly = true;
+                    }
+                    el.style.background = '#f1f5f9';
+                    el.style.cursor = 'not-allowed';
+                    el.classList.add('imported');
+                }
+            });
+            // Show Reset button
+            document.getElementById('resetImportBtn').style.display = 'inline-block';
+        }
+
+        // Reset button - unlock all fields
+        function resetImport() {
+            document.querySelectorAll('.imported').forEach(el => {
+                if (el.tagName === 'SELECT') {
+                    el.disabled = false;
+                } else if (el.type === 'range') {
+                    el.disabled = false;
+                    el.style.opacity = '';
+                } else {
+                    el.readOnly = false;
+                }
+                el.style.background = '';
+                el.style.cursor = '';
+                el.classList.remove('imported');
+            });
+            // Hide Reset button
+            document.getElementById('resetImportBtn').style.display = 'none';
+        }
+
+        // Sector presets
+        function applySectorPresets() {
+            const sector = document.getElementById('sector').value;
+            if (sector && sectorPresets[sector]) {
+                currentCoefs = sectorPresets[sector];
+                // Set sector-specific leverage threshold
+                document.getElementById('leverageThreshold').value = currentCoefs.leverageCap.toFixed(1);
+                document.getElementById('validationError').classList.remove('show');
+                
+                // Highlight active row in weights table
+                const rows = document.querySelectorAll('.weights-table tbody tr');
+                const sectorIndex = {
+                    'extractives': 0,
+                    'manufacturing': 1,
+                    'construction': 2,
+                    'consumer': 3,
+                    'food': 4,
+                    'transport': 5,
+                    'technology': 6
+                };
+                rows.forEach((row, idx) => {
+                    if (idx === sectorIndex[sector]) {
+                        row.style.background = '#fff3e0';
+                        row.style.fontWeight = '600';
+                    } else {
+                        row.style.background = '';
+                        row.style.fontWeight = '';
+                    }
+                });
+                
+                // Update weight displays in slider labels
+                document.getElementById('alphaDisplay').textContent = '· α = ' + currentCoefs.alpha.toFixed(2);
+                document.getElementById('betaDisplay').textContent = '· β = ' + currentCoefs.beta.toFixed(2);
+                document.getElementById('gammaDisplay').textContent = '· γ = ' + currentCoefs.gamma.toFixed(2);
+                document.getElementById('thetaDisplay').textContent = '(θ base = ' + currentCoefs.theta.toFixed(2) + ')';
+                document.getElementById('thetaAdjDisplay').textContent = '· θ base = ' + currentCoefs.theta.toFixed(2);
+                
+                // Update SCF weight displays
+                document.getElementById('lambdaDisplay').textContent = '· λ = ' + currentCoefs.lambda.toFixed(2);
+                document.getElementById('muDisplay').textContent = '· μ = ' + currentCoefs.mu.toFixed(2);
+                
+                // Highlight active row in SCF weights table
+                const scfRows = document.querySelectorAll('#scfWeightsTable tbody tr');
+                scfRows.forEach((row, idx) => {
+                    if (idx === sectorIndex[sector]) {
+                        row.style.background = '#fff3e0';
+                        row.style.fontWeight = '600';
+                    } else {
+                        row.style.background = '';
+                        row.style.fontWeight = '';
+                    }
+                });
+                
+                calculateGates();
+                calculate();
+            }
+        }
+
+        // Update slider display
+        function updateSlider(slider) {
+            document.getElementById(slider.id + 'Value').textContent = parseFloat(slider.value).toFixed(2);
+        }
+
+        // Calculate gates
+        function calculateGates() {
+            const roic = parseFloat(document.getElementById('roic').value);
+            const wacc = parseFloat(document.getElementById('wacc').value);
+            const fcf = parseFloat(document.getElementById('fcf').value);
+            const leverage = parseFloat(document.getElementById('leverage').value);
+            const leverageThreshold = parseFloat(document.getElementById('leverageThreshold').value) || 3.0;
+
+            let g1 = null, g2 = null, g3 = null;
+
+            // Gate 1: ROIC >= WACC
+            if (!isNaN(roic) && !isNaN(wacc)) {
+                g1 = roic >= wacc;
+                const g1El = document.getElementById('gate1Status');
+                g1El.textContent = g1 ? '✓' : '✗';
+                g1El.className = 'gate-status ' + (g1 ? 'pass' : 'fail');
+                g1El.setAttribute('data-tooltip', g1 ? 'Pass: ROIC exceeds WACC' : 'Fail: ROIC below WACC');
+            } else {
+                document.getElementById('gate1Status').textContent = '?';
+                document.getElementById('gate1Status').className = 'gate-status pending';
+                document.getElementById('gate1Status').setAttribute('data-tooltip', 'Gate 1: ROIC must exceed WACC');
+            }
+
+            // Gate 2: FCF > 0
+            if (!isNaN(fcf)) {
+                g2 = fcf > 0;
+                const g2El = document.getElementById('gate2Status');
+                g2El.textContent = g2 ? '✓' : '✗';
+                g2El.className = 'gate-status ' + (g2 ? 'pass' : 'fail');
+                g2El.setAttribute('data-tooltip', g2 ? 'Pass: Positive cash flow' : 'Fail: Negative cash flow');
+            } else {
+                document.getElementById('gate2Status').textContent = '?';
+                document.getElementById('gate2Status').className = 'gate-status pending';
+                document.getElementById('gate2Status').setAttribute('data-tooltip', 'Gate 2: FCF must be positive');
+            }
+
+            // Gate 3: Leverage < threshold
+            if (!isNaN(leverage)) {
+                g3 = leverage < leverageThreshold;
+                const g3El = document.getElementById('gate3Status');
+                g3El.textContent = g3 ? '✓' : '✗';
+                g3El.className = 'gate-status ' + (g3 ? 'pass' : 'fail');
+                g3El.setAttribute('data-tooltip', g3 ? 'Pass: Leverage ' + leverage.toFixed(1) + 'x below ' + leverageThreshold.toFixed(1) + 'x cap' : 'Fail: Leverage ' + leverage.toFixed(1) + 'x exceeds ' + leverageThreshold.toFixed(1) + 'x cap');
+            } else {
+                document.getElementById('gate3Status').textContent = '?';
+                document.getElementById('gate3Status').className = 'gate-status pending';
+                document.getElementById('gate3Status').setAttribute('data-tooltip', 'Gate 3: ND/EBITDA cap by sector: Tech 2.0x | Extractives/Manufacturing/Consumer 2.5x | Construction/Food 3.0x | Transport 3.5x');
+            }
+
+            // CDG (Capital Discipline Gate)
+            if (g1 !== null && g2 !== null && g3 !== null) {
+                cesStatus = (g1 && g2 && g3) ? 1 : 0;
+                const cesEl = document.getElementById('cesDisplay');
+                const cesVal = document.getElementById('cesValue');
+                cesEl.className = 'ces-display ' + (cesStatus ? 'pass' : 'fail');
+                cesVal.textContent = 'CDG = ' + (cesStatus ? 'PASS' : 'FAIL');
+            } else {
+                cesStatus = null;
+                document.getElementById('cesDisplay').className = 'ces-display';
+                document.getElementById('cesValue').textContent = 'CDG = ?';
+            }
+
+            calculate();
+        }
+
+        // Get vesting factor from ladder
+        function getVestingFactor(ret, ladder) {
+            if (ret < 0) return 0;
+            if (ret >= ladder.cap) return 2.0;
+            if (ret >= ladder.stretch) return 1.5 + 0.5 * (ret - ladder.stretch) / (ladder.cap - ladder.stretch);
+            if (ret >= ladder.target) return 1.0 + 0.5 * (ret - ladder.target) / (ladder.stretch - ladder.target);
+            if (ret >= ladder.threshold) return 0.5 + 0.5 * (ret - ladder.threshold) / (ladder.target - ladder.threshold);
+            return 0;
+        }
+
+        // Main calculation
+        function calculate() {
+            const sector = document.getElementById('sector').value;
+            if (!sector || !currentCoefs) {
+                return;
+            }
+
+            const year = document.getElementById('year').value || '2024';
+            document.getElementById('outputYear').textContent = year;
+            document.getElementById('scenarioYear').textContent = year;
+
+            // Get inputs
+            const p0 = parseFloat(document.getElementById('p0').value) || 0;
+            const p1 = parseFloat(document.getElementById('p1').value) || 0;
+            const d = parseFloat(document.getElementById('dividends').value) || 0;
+            const roic = parseFloat(document.getElementById('roic').value) || 0;
+            const wacc = parseFloat(document.getElementById('wacc').value) || 0;
+
+            const rar = parseFloat(document.getElementById('rar').value) || 0;
+            const lve = parseFloat(document.getElementById('lve').value) || 0;
+            const crr = parseFloat(document.getElementById('crr').value) || 0;
+            const resourceExposure = parseFloat(document.getElementById('resourceExposure').value) || 0;
+
+            const pa = parseFloat(document.getElementById('pa').value) || 0;
+            const vci = parseFloat(document.getElementById('vci').value) || 0;
+            const ecr = parseFloat(document.getElementById('ecr').value) || 0;
+
+            const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 1.5;
+            const stiTarget = parseFloat(document.getElementById('stiTarget').value) || 1.5;
+            const ltiTarget = parseFloat(document.getElementById('ltiTarget').value) || 1.5;
+            const ltiCapPct = parseFloat(document.getElementById('ltiCap').value) || 200;
+            const compCurrency = document.getElementById('compCurrency').value;
+
+            // Calculate TRS
+            let trs = 0;
+            if (p0 > 0) {
+                trs = (p1 - p0 + d) / p0;
+            }
+            document.getElementById('trsDisplay').textContent = (trs >= 0 ? '+' : '') + (trs * 100).toFixed(2) + '%';
+            
+            // Show/hide TRS note when P1 < P0
+            const trsNote = document.getElementById('trsNote');
+            if (p1 > 0 && p0 > 0 && p1 < p0) {
+                trsNote.style.display = 'block';
+            } else {
+                trsNote.style.display = 'none';
+            }
+
+            // Calculate RM
+            const rm = currentCoefs.alpha * rar + currentCoefs.beta * lve + currentCoefs.gamma * crr;
+            document.getElementById('rmDisplay').textContent = rm.toFixed(4);
+
+            // Calculate adjusted theta based on Resource Cost Exposure
+            const adjustedTheta = Math.max(0, Math.min(1, currentCoefs.theta + resourceExposure));
+
+            // Calculate TR2S
+            // When TRS >= 0: TR2S = TRS × (1 + RM) - RM is an uplift
+            // When TRS < 0: TR2S = TRS × (1 - θ·RM) - downside damping (using adjusted theta)
+            let tr2s;
+            if (trs >= 0) {
+                tr2s = trs * (1 + rm);
+            } else {
+                tr2s = trs * (1 - adjustedTheta * rm);
+            }
+            
+            // Display TR²S
+            document.getElementById('tr2sDisplay').textContent = 'TR²S = ' + (tr2s >= 0 ? '+' : '') + (tr2s * 100).toFixed(2) + '%';
+
+            // Calculate RI and RE
+            const ri = currentCoefs.lambda * vci + currentCoefs.mu * ecr;
+            const re = pa * ri;
+            document.getElementById('riDisplay').textContent = 'RI = ' + ri.toFixed(4);
+            document.getElementById('reDisplay').textContent = 'RE = ' + (re >= 0 ? '+' : '') + re.toFixed(4);
+
+            // Calculate TR3S
+            const tr3s = tr2s * (1 + re);
+            
+            // Display TR³S
+            document.getElementById('tr3sDisplay').textContent = 'TR³S = ' + (tr3s >= 0 ? '+' : '') + (tr3s * 100).toFixed(2) + '%';
+
+            // Update Strategic Map Panel
+            const roicSpread = roic - wacc;
+            document.getElementById('mapGateStatus').textContent = cesStatus === 1 ? 'Passed' : (cesStatus === 0 ? 'Failed' : '-');
+            document.getElementById('mapGateStatus').className = 'map-value ' + (cesStatus === 1 ? 'pass' : (cesStatus === 0 ? 'fail' : ''));
+            document.getElementById('mapRoicSpread').textContent = (!isNaN(roicSpread) ? (roicSpread >= 0 ? '+' : '') + roicSpread.toFixed(0) + 'pp above WACC' : '-');
+            document.getElementById('mapRoicSpread').className = 'map-value ' + (roicSpread >= 0 ? 'positive' : 'negative');
+
+            document.getElementById('mapRAR').textContent = rar.toFixed(2);
+            document.getElementById('mapLVE').textContent = lve.toFixed(2);
+            document.getElementById('mapCRR').textContent = crr.toFixed(2);
+            document.getElementById('mapResourceExposure').textContent = (resourceExposure >= 0 ? '+' : '') + resourceExposure.toFixed(2);
+            document.getElementById('mapResourceExposure').className = 'map-value ' + (resourceExposure >= 0 ? 'positive' : 'negative');
+
+            document.getElementById('mapPA').textContent = (pa >= 0 ? '+' : '') + pa.toFixed(1);
+            document.getElementById('mapPA').className = 'map-value ' + (pa >= 0 ? 'positive' : 'negative');
+            document.getElementById('mapVCI').textContent = vci.toFixed(2);
+            document.getElementById('mapECR').textContent = ecr.toFixed(2);
+            document.getElementById('mapFactorScore').textContent = (re >= 0 ? '+' : '') + re.toFixed(2);
+            document.getElementById('mapFactorScore').className = 'map-value ' + (re >= 0 ? 'positive' : 'negative');
+
+            // Position assessment
+            const capitalRisk = cesStatus === 1 && roicSpread > 5 ? 'Low Risk' : (cesStatus === 1 ? 'Medium' : 'High Risk');
+            const assetRisk = rm >= 0.5 ? 'Low Risk' : (rm >= 0.3 ? 'Medium' : 'High Risk');
+            const vulnLevel = re >= 0.1 ? 'Low' : (re >= 0 ? 'Medium' : 'High');
+
+            document.getElementById('posCapital').textContent = capitalRisk;
+            document.getElementById('posAsset').textContent = assetRisk;
+            document.getElementById('posVulnerability').textContent = vulnLevel;
+
+            // Quadrant logic
+            let quadrant = 'Stranded Asset Risk Zone';
+            if (cesStatus === 1 && rm >= 0.4 && re >= 0) {
+                quadrant = 'Resilient Transformation Zone';
+            } else if (cesStatus === 1 && rm < 0.4 && re < 0.1) {
+                quadrant = 'Commoditization Risk Zone';
+            } else if (cesStatus === 0 && rm >= 0.4) {
+                quadrant = 'Undervalued Asset Risk Zone';
+            }
+            document.getElementById('posQuadrant').textContent = quadrant;
+
+            // Interpretation
+            const companyName = document.getElementById('companyName').value || 'This company';
+            let interp = '';
+            if (quadrant === 'Resilient Transformation Zone') {
+                interp = `${companyName} demonstrates strong capital discipline combined with high asset viability and positive system alignment. ROIC exceeds WACC and asset base is being preserved. TR²S and TR³S metrics can be applied to LTI vesting.`;
+            } else if (quadrant === 'Commoditization Risk Zone') {
+                interp = `${companyName} shows strong capital returns but high primary resource dependency remains. ROIC exceeds WACC, but asset preservation lags. Physical circularity may be present, but value capture is failing.`;
+            } else if (quadrant === 'Undervalued Asset Risk Zone') {
+                interp = `${companyName} has strong asset preservation but capital discipline needs attention. ROIC at or below WACC despite sound transformation logic. Focus on restoring capital discipline before applying extended metrics.`;
+            } else {
+                interp = `${companyName} shows both capital discipline gaps and high resource dependency. ROIC at or below WACC and primary material dependency remains high. Strategic review required.`;
+            }
+            document.getElementById('interpretation').textContent = interp;
+
+            // CEO Compensation
+            const ltiCap = ltiTarget * (ltiCapPct / 100);
+            document.getElementById('compBase').textContent = compCurrency + baseSalary.toFixed(2) + 'M';
+            document.getElementById('compSTI').textContent = compCurrency + stiTarget.toFixed(2) + 'M';
+            document.getElementById('compCap').textContent = compCurrency + ltiCap.toFixed(2) + 'M';
+
+            // Vesting calculations
+            const ladder = getVestingLadder();
+            const trsVesting = cesStatus === 1 ? Math.min(getVestingFactor(trs, ladder.trs), 2) : 0;
+            const tr2sVesting = cesStatus === 1 ? Math.min(getVestingFactor(tr2s, ladder.tr2s), 2) : 0;
+            const tr3sVesting = cesStatus === 1 ? Math.min(getVestingFactor(tr3s, ladder.tr3s), 2) : 0;
+
+            // Price floor check
+            const priceFloor = p1 >= p0 || p0 === 0;
+            const trsVestingFinal = priceFloor ? trsVesting : 0;
+            const tr2sVestingFinal = priceFloor ? tr2sVesting : 0;
+            const tr3sVestingFinal = priceFloor ? tr3sVesting : 0;
+
+            // LTI payouts
+            const trsLti = Math.min(ltiTarget * trsVestingFinal, ltiCap);
+            const tr2sLti = Math.min(ltiTarget * tr2sVestingFinal, ltiCap);
+            const tr3sLti = Math.min(ltiTarget * tr3sVestingFinal, ltiCap);
+
+            // Total comp
+            const trsTotal = baseSalary + stiTarget + trsLti;
+            const tr2sTotal = baseSalary + stiTarget + tr2sLti;
+            const tr3sTotal = baseSalary + stiTarget + tr3sLti;
+
+            // Format helpers
+            const fmtPct = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
+            const fmtVest = v => (v * 100).toFixed(1) + '%' + (v >= 2 ? ' (capped)' : '');
+            const fmtMoney = v => compCurrency + v.toFixed(2) + 'M' + (v >= ltiCap ? ' (capped)' : '');
+
+            // Update scenario table
+            document.getElementById('scenarioTrsReturn').textContent = fmtPct(trs);
+            document.getElementById('scenarioTrsReturn').className = trs >= 0 ? 'positive' : 'negative';
+            document.getElementById('scenarioTrsVesting').textContent = fmtVest(trsVestingFinal);
+            document.getElementById('scenarioTrsLti').textContent = fmtMoney(trsLti);
+            document.getElementById('scenarioTrsTotal').textContent = compCurrency + trsTotal.toFixed(2) + 'M';
+
+            document.getElementById('scenarioTr2sReturn').textContent = fmtPct(tr2s);
+            document.getElementById('scenarioTr2sReturn').className = tr2s >= 0 ? 'positive' : 'negative';
+            document.getElementById('scenarioTr2sVesting').textContent = fmtVest(tr2sVestingFinal);
+            document.getElementById('scenarioTr2sLti').textContent = fmtMoney(tr2sLti);
+            document.getElementById('scenarioTr2sTotal').textContent = compCurrency + tr2sTotal.toFixed(2) + 'M';
+
+            const tr2sDelta = tr2sTotal - trsTotal;
+            const tr2sDeltaPct = trsTotal > 0 ? ((tr2sTotal / trsTotal - 1) * 100) : 0;
+            document.getElementById('scenarioTr2sVsTrs').textContent = tr2sDelta !== 0 ? 
+                (tr2sDelta >= 0 ? '+' : '') + compCurrency + tr2sDelta.toFixed(2) + 'M (' + (tr2sDeltaPct >= 0 ? '+' : '') + tr2sDeltaPct.toFixed(0) + '%)' : '-';
+
+            document.getElementById('scenarioTr3sReturn').textContent = fmtPct(tr3s);
+            document.getElementById('scenarioTr3sReturn').className = tr3s >= 0 ? 'positive' : 'negative';
+            document.getElementById('scenarioTr3sVesting').textContent = fmtVest(tr3sVestingFinal);
+            document.getElementById('scenarioTr3sLti').textContent = fmtMoney(tr3sLti);
+            document.getElementById('scenarioTr3sTotal').textContent = compCurrency + tr3sTotal.toFixed(2) + 'M';
+
+            const tr3sDelta = tr3sTotal - trsTotal;
+            const tr3sDeltaPct = trsTotal > 0 ? ((tr3sTotal / trsTotal - 1) * 100) : 0;
+            document.getElementById('scenarioTr3sVsTrs').textContent = tr3sDelta !== 0 ? 
+                (tr3sDelta >= 0 ? '+' : '') + compCurrency + tr3sDelta.toFixed(2) + 'M (' + (tr3sDeltaPct >= 0 ? '+' : '') + tr3sDeltaPct.toFixed(0) + '%)' : '-';
+        }
+
+        // Print functions
+        function printInputData() {
+            const sector = document.getElementById('sector').value;
+            if (!sector) {
+                document.getElementById('validationError').classList.add('show');
+                return;
+            }
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-GB');
+            window.print();
+        }
+
+        function printResults() {
+            const sector = document.getElementById('sector').value;
+            if (!sector) {
+                document.getElementById('validationError').classList.add('show');
+                return;
+            }
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-GB');
+            window.print();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default values for sliders
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                updateSlider(slider);
+            });
+        });
+    </script>
+
+</body>
+</html>
